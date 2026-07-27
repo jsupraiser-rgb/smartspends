@@ -39,7 +39,7 @@
             margin: 0;
             color: var(--accent-gold);
         }
-        /* Smaller, Sleeker Language Selector */
+        /* Much smaller width for language dropdown */
         .lang-select {
             background-color: #022c22;
             color: var(--accent-gold);
@@ -47,6 +47,8 @@
             padding: 3px 6px;
             border-radius: 6px;
             font-size: 0.72rem;
+            width: auto;
+            max-width: 110px;
             outline: none;
         }
         /* Fancy Bottom Navigation Tabs */
@@ -136,16 +138,17 @@
             font-weight: bold;
             color: var(--accent-gold);
         }
-        /* Premium, Smaller Set Budget Button */
+        /* Reduced width for Set Budget button */
         .btn-gold-small {
             background: linear-gradient(135deg, #fbbf24, #d97706);
             color: #022c22;
             border: none;
-            padding: 5px 10px;
+            padding: 5px 12px;
             border-radius: 8px;
             font-weight: bold;
             font-size: 0.75rem;
             cursor: pointer;
+            width: auto;
             box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
             transition: all 0.2s ease;
         }
@@ -707,6 +710,8 @@
         if(val.trim() !== '') {
             currentCurrency = val.trim();
             localStorage.setItem('ss_currency', currentCurrency);
+            // Automatically clear or unselect the preset dropdown if it doesn't match
+            document.getElementById('currencySelect').value = '';
             updateUI();
         }
     }
