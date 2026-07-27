@@ -39,14 +39,15 @@
             margin: 0;
             color: var(--accent-gold);
         }
-        /* Language Selector at Top */
+        /* Smaller, Sleeker Language Selector */
         .lang-select {
             background-color: #022c22;
             color: var(--accent-gold);
             border: 1px solid var(--border-color);
-            padding: 4px 8px;
+            padding: 3px 6px;
             border-radius: 6px;
-            font-size: 0.8rem;
+            font-size: 0.72rem;
+            outline: none;
         }
         /* Fancy Bottom Navigation Tabs */
         .nav-bar {
@@ -98,11 +99,11 @@
             border: 1px solid #10b981;
         }
         .hero-title {
-            font-size: 0.75rem;
-            text-transform: uppercase;
+            font-size: 0.9rem;
+            font-weight: bold;
             letter-spacing: 1px;
-            opacity: 0.9;
-            margin-bottom: 4px;
+            opacity: 0.95;
+            margin-bottom: 6px;
             color: var(--accent-gold);
         }
         .hero-balance {
@@ -120,8 +121,9 @@
         }
         .hero-grid div span {
             display: block;
-            font-size: 0.7rem;
-            opacity: 0.8;
+            font-size: 0.78rem;
+            font-weight: 500;
+            opacity: 0.9;
         }
         .section-header {
             display: flex;
@@ -134,15 +136,21 @@
             font-weight: bold;
             color: var(--accent-gold);
         }
-        .btn-gold {
-            background-color: var(--accent-gold);
-            color: #064e3b;
+        /* Premium, Smaller Set Budget Button */
+        .btn-gold-small {
+            background: linear-gradient(135deg, #fbbf24, #d97706);
+            color: #022c22;
             border: none;
-            padding: 8px 14px;
-            border-radius: 10px;
+            padding: 5px 10px;
+            border-radius: 8px;
             font-weight: bold;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             cursor: pointer;
+            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
+            transition: all 0.2s ease;
+        }
+        .btn-gold-small:active {
+            transform: scale(0.95);
         }
         .box {
             background-color: var(--card-bg);
@@ -179,8 +187,9 @@
             border-radius: 6px;
         }
         .progress-footer {
-            font-size: 0.75rem;
-            color: #d1d5db;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: #e5e7eb;
         }
         input, select, button {
             width: 100%;
@@ -212,8 +221,9 @@
         }
         .list-card div span {
             display: block;
-            font-size: 0.75rem;
-            color: #d1d5db;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: #e5e7eb;
         }
         .btn-group button {
             width: auto;
@@ -273,22 +283,22 @@
     <div class="top-header">
         <h1>SmartSpends</h1>
         <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
-            <option value="en">English (Default)</option>
-            <option value="hi">हिंदी (Hindi)</option>
-            <option value="mr">मराठी (Marathi)</option>
-            <option value="gu">ગુજરાતી (Gujarati)</option>
-            <option value="bn">বাংলা (Bengali)</option>
-            <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
-            <option value="ta">தமிழ் (Tamil)</option>
-            <option value="te">తెలుగు (Telugu)</option>
-            <option value="ur">اردو (Urdu)</option>
-            <option value="ru">Русский (Russian)</option>
-            <option value="zh">中文 (Chinese)</option>
-            <option value="es">Español (Spanish)</option>
-            <option value="fr">Français (French)</option>
-            <option value="de">Deutsch (German)</option>
-            <option value="ja">日本語 (Japanese)</option>
-            <option value="ar">العربية (Arabic)</option>
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+            <option value="mr">मराठी</option>
+            <option value="gu">ગુજરાતી</option>
+            <option value="bn">বাংলা</option>
+            <option value="pa">ਪੰਜਾਬੀ</option>
+            <option value="ta">தமிழ்</option>
+            <option value="te">తెలుగు</option>
+            <option value="ur">اردو</option>
+            <option value="ru">Русский</option>
+            <option value="zh">中文</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+            <option value="ja">日本語</option>
+            <option value="ar">العربية</option>
         </select>
     </div>
 
@@ -296,7 +306,7 @@
     <div id="tab-dashboard" class="tab-content active">
         <div class="hero-card">
             <div class="hero-title" id="lblTrackerTitle">SAVEIT · BUDGET TRACKER</div>
-            <div style="font-size:0.8rem; margin-bottom:2px; opacity:0.9;" id="lblCurrentBalance">Current Balance</div>
+            <div style="font-size:0.85rem; font-weight:600; margin-bottom:2px; opacity:0.95;" id="lblCurrentBalance">Current Balance</div>
             <div class="hero-balance" id="dashBalance">0</div>
             <div class="hero-grid">
                 <div><span id="lblIncome">↓ Income</span><strong id="dashIncome" style="color:#34d399;">0</strong></div>
@@ -332,7 +342,7 @@
     <div id="tab-budgets" class="tab-content">
         <div class="section-header">
             <div class="section-title" id="lblBudgetsTitle">Budgets</div>
-            <button class="btn-gold" onclick="openBudgetModal()" id="btnSetBudget">+ Set Budget</button>
+            <button class="btn-gold-small" onclick="openBudgetModal()" id="btnSetBudget">+ Set Budget</button>
         </div>
         
         <div class="progress-card" id="totalBudgetCard">
@@ -352,7 +362,7 @@
     <div id="tab-categories" class="tab-content">
         <div class="section-title" style="margin-bottom:12px;" id="lblCountryCurrency">Country & Currency</div>
         <div class="box">
-            <label style="font-size:0.8rem; color:#d1d5db;" id="lblSelectCurrency">Select Major Currency</label>
+            <label style="font-size:0.85rem; font-weight:600; color:#f3f4f6;" id="lblSelectCurrency">Select Major Currency</label>
             <select id="currencySelect" onchange="selectPresetCurrency(this.value)">
                 <option value="₹">₹ (INR - India)</option>
                 <option value="$">$ (USD - USA)</option>
@@ -363,7 +373,7 @@
                 <option value="C$">C$ (CAD - Canada)</option>
             </select>
 
-            <label style="font-size:0.8rem; color:#d1d5db; margin-top:10px; display:block;" id="lblCustomCurrency">Or Type Custom Native Currency Symbol/Code</label>
+            <label style="font-size:0.85rem; font-weight:600; color:#f3f4f6; margin-top:10px; display:block;" id="lblCustomCurrency">Or Type Custom Native Currency Symbol/Code</label>
             <input type="text" id="customCurrencyInput" placeholder="e.g. Kč, R$, Rp, kr, ₦" oninput="applyCustomCurrency(this.value)">
         </div>
 
@@ -409,13 +419,13 @@
             <h3 style="margin:0; font-size:1.1rem; color:var(--accent-gold);" id="modalTitle">Set Budget</h3>
             <span onclick="closeBudgetModal()" style="font-size:1.2rem; cursor:pointer; color:#d1d5db;">&times;</span>
         </div>
-        <label style="font-size:0.8rem; color:#d1d5db;" id="modalLblCategory">Category</label>
+        <label style="font-size:0.85rem; font-weight:600; color:#f3f4f6;" id="modalLblCategory">Category</label>
         <select id="modalCategorySelect" style="margin-bottom:10px;"></select>
         
-        <label style="font-size:0.8rem; color:#d1d5db;" id="modalLblLimit">Monthly Limit (<span class="currSign">₹</span>)</label>
+        <label style="font-size:0.85rem; font-weight:600; color:#f3f4f6;" id="modalLblLimit">Monthly Limit (<span class="currSign">₹</span>)</label>
         <input type="number" id="modalLimitInput" placeholder="e.g. 10000" style="margin-bottom:14px;" required>
 
-        <button class="btn-gold" style="width:100%; margin-bottom:8px;" onclick="saveModalBudget()" id="modalBtnSave">Save Budget</button>
+        <button class="btn-gold-small" style="width:100%; padding:10px; margin-bottom:8px; font-size:0.9rem;" onclick="saveModalBudget()" id="modalBtnSave">Save Budget</button>
         <button style="width:100%; background:transparent; border:1px solid var(--border-color); color:var(--text-color); padding:10px; border-radius:8px; cursor:pointer;" onclick="closeBudgetModal()" id="modalBtnCancel">Cancel</button>
     </div>
 </div>
