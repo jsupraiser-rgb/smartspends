@@ -11,6 +11,7 @@
             --text-color: #f0fdf4;
             --accent-green: #34d399;
             --accent-gold: #fbbf24;
+            --accent-red: #ef4444;
             --accent-blue: #38bdf8;
             --border-color: #047857;
         }
@@ -39,7 +40,7 @@
             margin: 0;
             color: var(--accent-gold);
         }
-        /* Much smaller width for language dropdown */
+        /* Smaller width for language dropdown */
         .lang-select {
             background-color: #022c22;
             color: var(--accent-gold);
@@ -138,22 +139,25 @@
             font-weight: bold;
             color: var(--accent-gold);
         }
-        /* Reduced width for Set Budget button */
-        .btn-gold-small {
-            background: linear-gradient(135deg, #fbbf24, #d97706);
-            color: #022c22;
+        /* Round, red button for Set Budget */
+        .btn-red-round {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #fff;
             border: none;
-            padding: 5px 12px;
-            border-radius: 8px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
             font-weight: bold;
-            font-size: 0.75rem;
+            font-size: 1.1rem;
             cursor: pointer;
-            width: auto;
-            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
             transition: all 0.2s ease;
         }
-        .btn-gold-small:active {
-            transform: scale(0.95);
+        .btn-red-round:active {
+            transform: scale(0.92);
         }
         .box {
             background-color: var(--card-bg);
@@ -345,7 +349,7 @@
     <div id="tab-budgets" class="tab-content">
         <div class="section-header">
             <div class="section-title" id="lblBudgetsTitle">Budgets</div>
-            <button class="btn-gold-small" onclick="openBudgetModal()" id="btnSetBudget">+ Set Budget</button>
+            <button class="btn-red-round" onclick="openBudgetModal()" title="Set Budget">+</button>
         </div>
         
         <div class="progress-card" id="totalBudgetCard">
@@ -428,7 +432,7 @@
         <label style="font-size:0.85rem; font-weight:600; color:#f3f4f6;" id="modalLblLimit">Monthly Limit (<span class="currSign">₹</span>)</label>
         <input type="number" id="modalLimitInput" placeholder="e.g. 10000" style="margin-bottom:14px;" required>
 
-        <button class="btn-gold-small" style="width:100%; padding:10px; margin-bottom:8px; font-size:0.9rem;" onclick="saveModalBudget()" id="modalBtnSave">Save Budget</button>
+        <button class="action-btn" style="width:100%; padding:10px; margin-bottom:8px; font-size:0.9rem;" onclick="saveModalBudget()" id="modalBtnSave">Save Budget</button>
         <button style="width:100%; background:transparent; border:1px solid var(--border-color); color:var(--text-color); padding:10px; border-radius:8px; cursor:pointer;" onclick="closeBudgetModal()" id="modalBtnCancel">Cancel</button>
     </div>
 </div>
@@ -514,7 +518,7 @@
             dash: "ড্যাশবোর্ড", tx: "লেনদেন", budgets: "বাজেট", categories: "বিভাগ", audit: "অডিট",
             trackerTitle: "সেভইট · বাজেট ট্র্যাকার", currentBalance: "বর্তমান ব্যালেন্স", income: "↓ আয়", expenses: "↑ খরচ", saved: "📈 সঞ্চয়",
             catBreakdown: "বিভাগওয়ারী বিবরণ", manageTx: "লেনদেন পরিচালনা করুন", optExpense: "খরচ", optIncome: "আয়",
-            addTx: "লেনদেন যোগ করুন", updateTx: "লেনদেন আপডেট করুন", setBudgetBtn: "+ বাজেট সেট করুন", totalBudget: "মোট বাজেট",
+            addTx: "লেনদেন যোগ করুন", updateTx: "লেনদেন আপডেট করুন", setBudgetBtn: "+ বাজেট সেট করুন", total বাজেট: "মোট বাজেট",
             countryCurrency: "দেশ এবং মুদ্রা", selectCurrency: "প্রধান মুদ্রা নির্বাচন করুন", customCurrency: "অথবা কাস্টম দেশীয় মুদ্রার প্রতীক টাইপ করুন",
             categoriesLimits: "বিভাগ এবং সীমা", addCat: "বিভাগ যোগ করুন", updateCat: "বিভাগ আপডেট করুন", auditTitle: "অডিট ব্যালেন্স শীট",
             liabilities: "দায় ও ইকুইটি", assets: "সম্পদ ও প্রবাহ", netCapital: "নিট মূলধন / আয়", currentCash: "বর্তমান নগদ ব্যালেন্স",
@@ -663,7 +667,6 @@
         }
 
         document.getElementById('lblBudgetsTitle').textContent = t.budgets;
-        document.getElementById('btnSetBudget').textContent = t.setBudgetBtn;
         document.getElementById('lblTotalBudget').textContent = t.totalBudget;
 
         document.getElementById('lblCountryCurrency').textContent = t.countryCurrency;
@@ -707,10 +710,10 @@
     }
 
     function applyCustomCurrency(val) {
-        if(val.trim() !== '') {
-            currentCurrency = val.trim();
+        let typedVal = val.trim();
+        if(typedVal !== '') {
+            currentCurrency = typedVal;
             localStorage.setItem('ss_currency', currentCurrency);
-            // Automatically clear or unselect the preset dropdown if it doesn't match
             document.getElementById('currencySelect').value = '';
             updateUI();
         }
