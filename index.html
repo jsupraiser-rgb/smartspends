@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartSpends - Minimalist Budget Planner</title>
+    <title>SmartSpends - Budget Tracker</title>
     <style>
         :root {
             --bg-color: #0f172a;
             --card-bg: #1e293b;
             --text-color: #f8fafc;
+            --accent-pink: #f43f5e;
             --accent-green: #22c55e;
-            --accent-red: #ef4444;
             --accent-blue: #38bdf8;
             --border-color: #334155;
         }
@@ -26,48 +26,121 @@
         .container {
             width: 100%;
             max-width: 400px;
+            padding-bottom: 70px;
         }
         h1 {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
             color: var(--accent-blue);
         }
-        .dashboard {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .card {
+        /* Bottom Navigation Tabs */
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
             background-color: var(--card-bg);
-            padding: 14px;
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid var(--border-color);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 1000;
         }
-        .card.full {
-            grid-column: span 2;
-        }
-        .card h3 {
-            margin: 0 0 6px 0;
-            font-size: 0.85rem;
+        .nav-item {
+            background: none;
+            border: none;
             color: #94a3b8;
+            font-size: 0.7rem;
+            cursor: pointer;
+            text-align: center;
+            flex: 1;
         }
-        .card p {
-            margin: 0;
-            font-size: 1.2rem;
+        .nav-item.active {
+            color: var(--accent-pink);
             font-weight: bold;
         }
-        .income { color: var(--accent-green); }
-        .expense { color: var(--accent-red); }
-        
-        form {
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        /* Hero Card */
+        .hero-card {
+            background: linear-gradient(135deg, #f43f5e, #fb7185);
+            padding: 20px;
+            border-radius: 16px;
+            color: #fff;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(244, 63, 94, 0.25);
+        }
+        .hero-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            margin-bottom: 4px;
+        }
+        .hero-balance {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-bottom: 14px;
+        }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 10px;
+        }
+        .hero-grid div span {
+            display: block;
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+        .box {
             background-color: var(--card-bg);
-            padding: 16px;
+            padding: 14px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 14px;
+        }
+        .progress-card {
+            background-color: var(--card-bg);
+            padding: 12px 14px;
             border-radius: 12px;
             border: 1px solid var(--border-color);
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+        .progress-bar-bg {
+            background-color: #334155;
+            border-radius: 6px;
+            height: 8px;
+            width: 100%;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+        .progress-bar-fill {
+            background-color: var(--accent-green);
+            height: 100%;
+            border-radius: 6px;
+        }
+        .progress-footer {
+            font-size: 0.75rem;
+            color: #94a3b8;
         }
         input, select, button {
             width: 100%;
@@ -78,33 +151,60 @@
             background-color: #0f172a;
             color: var(--text-color);
             box-sizing: border-box;
+            font-size: 0.95rem;
         }
-        button {
-            background-color: var(--accent-blue);
-            color: #0f172a;
+        button.action-btn {
+            background-color: var(--accent-pink);
+            color: #fff;
             font-weight: bold;
             cursor: pointer;
             border: none;
         }
-        .transaction-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .transaction-item {
+        .list-card {
             background-color: var(--card-bg);
             padding: 12px;
-            border-radius: 8px;
+            border-radius: 10px;
             margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border: 1px solid var(--border-color);
         }
-        .transaction-info span {
+        .list-card div span {
             display: block;
             font-size: 0.75rem;
             color: #94a3b8;
+        }
+        .btn-group button {
+            width: auto;
+            padding: 4px 8px;
+            margin-left: 4px;
+            font-size: 0.75rem;
+        }
+        .edit-btn { background-color: #f59e0b; color: #000; }
+        .del-btn { background-color: var(--accent-pink); color: #fff; }
+        
+        .tally-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+        .tally-table th, .tally-table td {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+        .tally-table th {
+            background-color: #334155;
+            color: var(--accent-blue);
+        }
+        .tally-total {
+            font-weight: bold;
+            background-color: #111827;
         }
     </style>
 </head>
@@ -113,92 +213,309 @@
 <div class="container">
     <h1>SmartSpends</h1>
 
-    <div class="dashboard">
-        <div class="card full">
-            <h3>Total Balance</h3>
-            <p id="totalBalance">$0.00</p>
+    <!-- TAB 1: DASHBOARD -->
+    <div id="tab-dashboard" class="tab-content active">
+        <div class="hero-card">
+            <div class="hero-title">SAVEIT · BUDGET TRACKER</div>
+            <div style="font-size:0.8rem; margin-bottom:2px; opacity:0.9;">Current Balance</div>
+            <div class="hero-balance" id="dashBalance">0</div>
+            <div class="hero-grid">
+                <div><span>↓ Income</span><strong id="dashIncome">0</strong></div>
+                <div><span>↑ Expenses</span><strong id="dashExpense">0</strong></div>
+                <div><span>📈 Saved</span><strong id="dashSaved">0%</strong></div>
+            </div>
         </div>
-        <div class="card">
-            <h3>Income</h3>
-            <p id="totalIncome" class="income">$0.00</p>
-        </div>
-        <div class="card">
-            <h3>Expenses</h3>
-            <p id="totalExpense" class="expense">$0.00</p>
+
+        <div class="section-title">Category Breakdown</div>
+        <div id="categoryBreakdownList"></div>
+    </div>
+
+    <!-- TAB 2: TRANSACTIONS -->
+    <div id="tab-transactions" class="tab-content">
+        <div class="section-title">Manage Transactions</div>
+        <form id="txForm">
+            <input type="hidden" id="editIndex" value="">
+            <input type="text" id="txTitle" placeholder="Description (e.g. Groceries)" required>
+            <input type="number" id="txAmount" placeholder="Amount" step="any" required>
+            <select id="txType">
+                <option value="expense">Expense</option>
+                <option value="income">Income</option>
+            </select>
+            <select id="txCategory"></select>
+            <button type="submit" class="action-btn" id="formSubmitBtn">Add Transaction</button>
+        </form>
+        <ul id="txList" style="list-style:none; padding:0; margin:0;"></ul>
+    </div>
+
+    <!-- TAB 3: BUDGETS -->
+    <div id="tab-budgets" class="tab-content">
+        <div class="section-title">Budget Limits</div>
+        <div class="box">
+            <p style="font-size: 0.85rem; color: #94a3b8; margin-top:0;">Set limits for your categories.</p>
+            <div id="budgetSettingsList"></div>
         </div>
     </div>
 
-    <form id="transactionForm">
-        <input type="text" id="title" placeholder="Description (e.g., Grocery)" required>
-        <input type="number" id="amount" placeholder="Amount ($)" step="0.01" required>
-        <select id="type">
-            <option value="income">Income</option>
-            <option value="expense">Expense</option>
-        </select>
-        <button type="submit">Add Transaction</button>
-    </form>
+    <!-- TAB 4: CATEGORIES & COUNTRY SETTINGS -->
+    <div id="tab-categories" class="tab-content">
+        <div class="section-title">Country & Currency</div>
+        <div class="box">
+            <label style="font-size:0.8rem; color:#94a3b8;">Select Currency Symbol</label>
+            <select id="currencySelect" onchange="changeCurrency(this.value)">
+                <option value="₹">₹ (INR - India)</option>
+                <option value="$">$ (USD - USA)</option>
+                <option value="€">€ (EUR - Europe)</option>
+                <option value="£">£ (GBP - UK)</option>
+                <option value="¥">¥ (JPY - Japan / CNY - China)</option>
+                <option value="A$">A$ (AUD - Australia)</option>
+                <option value="C$">C$ (CAD - Canada)</option>
+            </select>
+        </div>
 
-    <ul id="transactionList" class="transaction-list"></ul>
+        <div class="section-title">Categories</div>
+        <div class="box">
+            <input type="text" id="newCatInput" placeholder="New Category Name">
+            <button class="action-btn" onclick="addCategory()">Add Category</button>
+        </div>
+        <ul id="categoryList" style="list-style:none; padding:0; margin:0;"></ul>
+    </div>
+
+    <!-- TAB 5: AUDIT (TALLY STYLE) -->
+    <div id="tab-audit" class="tab-content">
+        <div class="section-title">Audit Balance Sheet</div>
+        <table class="tally-table">
+            <thead>
+                <tr>
+                    <th>Liabilities & Equity</th>
+                    <th>Assets & Inflows</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Net Capital / Income<br><span id="bsEquity" style="color:var(--accent-green);">0</span></td>
+                    <td>Current Cash Balance<br><span id="bsAsset" style="color:var(--accent-blue);">0</span></td>
+                </tr>
+                <tr class="tally-total">
+                    <td>Total: <span id="bsTotalLiab">0</span></td>
+                    <td>Total: <span id="bsTotalAsset">0</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- BOTTOM NAVIGATION -->
+<div class="nav-bar">
+    <button class="nav-item active" onclick="switchTab('dashboard', this)">Dashboard</button>
+    <button class="nav-item" onclick="switchTab('transactions', this)">Transactions</button>
+    <button class="nav-item" onclick="switchTab('budgets', this)">Budgets</button>
+    <button class="nav-item" onclick="switchTab('categories', this)">Categories</button>
+    <button class="nav-item" onclick="switchTab('audit', this)">Audit</button>
 </div>
 
 <script>
-    let transactions = JSON.parse(localStorage.getItem('smart_spends')) || [];
+    let currentCurrency = localStorage.getItem('ss_currency') || '₹';
+    let transactions = JSON.parse(localStorage.getItem('ss_transactions')) || [
+        { title: 'Housing Rent', amount: 1800, type: 'expense', category: 'Housing' },
+        { title: 'School Fees', amount: 1453, type: 'expense', category: "Kids' School" },
+        { title: 'Bike Fix', amount: 920, type: 'expense', category: 'Vehicle Repairs' },
+        { title: 'Monthly Salary', amount: 11062, type: 'income', category: 'Salary' }
+    ];
+    let categories = JSON.parse(localStorage.getItem('ss_categories')) || ['Housing', "Kids' School", 'Vehicle Repairs', 'House Repairs', 'Food', 'Salary', 'Utilities'];
+    let categoryBudgets = JSON.parse(localStorage.getItem('ss_budgets')) || { 'Housing': 2500, "Kids' School": 3000, 'Vehicle Repairs': 2000, 'House Repairs': 1000, 'Food': 500, 'Utilities': 3000 };
 
-    const form = document.getElementById('transactionForm');
-    const titleInput = document.getElementById('title');
-    const amountInput = document.getElementById('amount');
-    const typeInput = document.getElementById('type');
-    const transactionList = document.getElementById('transactionList');
-    const totalBalance = document.getElementById('totalBalance');
-    const totalIncome = document.getElementById('totalIncome');
-    const totalExpense = document.getElementById('totalExpense');
+    document.getElementById('currencySelect').value = currentCurrency;
+
+    function switchTab(tabName, btnElement) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        document.getElementById('tab-' + tabName).classList.add('active');
+        btnElement.classList.add('active');
+        updateUI();
+    }
+
+    function changeCurrency(val) {
+        currentCurrency = val;
+        localStorage.setItem('ss_currency', currentCurrency);
+        updateUI();
+    }
+
+    function updateDropdowns() {
+        const select = document.getElementById('txCategory');
+        select.innerHTML = '';
+        categories.forEach(cat => {
+            const opt = document.createElement('option');
+            opt.value = cat;
+            opt.textContent = cat;
+            select.appendChild(opt);
+        });
+    }
 
     function updateUI() {
-        transactionList.innerHTML = '';
+        updateDropdowns();
         let income = 0;
         let expense = 0;
+        let catSpending = {};
 
-        transactions.forEach((t) => {
-            const li = document.createElement('li');
-            li.className = 'transaction-item';
-            li.innerHTML = `
-                <div class="transaction-info">
-                    <strong>${t.title}</strong>
-                    <span>${t.type.toUpperCase()}</span>
-                </div>
-                <div style="color: ${t.type === 'income' ? 'var(--accent-green)' : 'var(--accent-red)'}; font-weight: bold;">
-                    ${t.type === 'income' ? '+' : '-'}$${parseFloat(t.amount).toFixed(2)}
-                </div>
-            `;
-            transactionList.appendChild(li);
+        categories.forEach(cat => catSpending[cat] = 0);
 
+        transactions.forEach(t => {
+            let amt = parseFloat(t.amount) || 0;
             if (t.type === 'income') {
-                income += parseFloat(t.amount);
+                income += amt;
             } else {
-                expense += parseFloat(t.amount);
+                expense += amt;
+                if (catSpending[t.category] !== undefined) {
+                    catSpending[t.category] += amt;
+                }
             }
         });
 
         let balance = income - expense;
-        totalBalance.textContent = `$${balance.toFixed(2)}`;
-        totalIncome.textContent = `+$${income.toFixed(2)}`;
-        totalExpense.textContent = `-$${expense.toFixed(2)}`;
+        let savedPercent = income > 0 ? Math.max(0, Math.round((balance / income) * 100)) : 0;
 
-        localStorage.setItem('smart_spends', JSON.stringify(transactions));
+        document.getElementById('dashBalance').textContent = `${currentCurrency}${balance.toLocaleString()}`;
+        document.getElementById('dashIncome').textContent = `${currentCurrency}${income.toLocaleString()}`;
+        document.getElementById('dashExpense').textContent = `${currentCurrency}${expense.toLocaleString()}`;
+        document.getElementById('dashSaved').textContent = `${savedPercent}%`;
+
+        // Render Category Progress Breakdown
+        let breakdownHtml = '';
+        categories.forEach(cat => {
+            if (cat === 'Salary') return;
+            let spent = catSpending[cat] || 0;
+            let limit = categoryBudgets[cat] || 1000;
+            let percent = Math.min(100, Math.round((spent / limit) * 100));
+
+            breakdownHtml += `
+                <div class="progress-card">
+                    <div class="progress-header">
+                        <span>${cat}</span>
+                        <span>${currentCurrency}${spent.toLocaleString()} / ${currentCurrency}${limit.toLocaleString()}</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: ${percent}%;"></div>
+                    </div>
+                    <div class="progress-footer">${percent}% used</div>
+                </div>
+            `;
+        });
+        document.getElementById('categoryBreakdownList').innerHTML = breakdownHtml;
+
+        // Render Transactions with Edit/Delete
+        let txHtml = '';
+        transactions.forEach((t, index) => {
+            txHtml += `
+                <li class="list-card">
+                    <div>
+                        <strong>${t.title}</strong>
+                        <span>${t.category} | ${t.type.toUpperCase()}</span>
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <span style="color: ${t.type === 'income' ? 'var(--accent-green)' : 'var(--accent-pink)'}; font-weight: bold; margin-right: 8px;">
+                            ${t.type === 'income' ? '+' : '-'}${currentCurrency}${parseFloat(t.amount).toLocaleString()}
+                        </span>
+                        <div class="btn-group">
+                            <button class="edit-btn" onclick="editTransaction(${index})">Edit</button>
+                            <button class="del-btn" onclick="deleteTransaction(${index})">Del</button>
+                        </div>
+                    </div>
+                </li>
+            `;
+        });
+        document.getElementById('txList').innerHTML = txHtml || '<p style="text-align:center; color:#94a3b8;">No transactions added yet.</p>';
+
+        // Render Budget Limit Settings
+        let budgetHtml = '';
+        categories.forEach(cat => {
+            if (cat === 'Salary') return;
+            let currentLimit = categoryBudgets[cat] || 1000;
+            budgetHtml += `
+                <div style="margin-bottom: 10px;">
+                    <label style="font-size:0.8rem; color:#94a3b8;">${cat} Limit (${currentCurrency})</label>
+                    <input type="number" value="${currentLimit}" onchange="updateBudgetLimit('${cat}', this.value)">
+                </div>
+            `;
+        });
+        document.getElementById('budgetSettingsList').innerHTML = budgetHtml;
+
+        // Render Categories list
+        let catListHtml = '';
+        categories.forEach((cat, idx) => {
+            catListHtml += `<li class="list-card"><strong>${cat}</strong> <button class="del-btn" onclick="deleteCategory(${idx})">Delete</button></li>`;
+        });
+        document.getElementById('categoryList').innerHTML = catListHtml;
+
+        // Tally Balance Sheet
+        document.getElementById('bsEquity').textContent = `${currentCurrency}${balance.toLocaleString()}`;
+        document.getElementById('bsAsset').textContent = `${currentCurrency}${balance.toLocaleString()}`;
+        document.getElementById('bsTotalLiab').textContent = `${currentCurrency}${balance.toLocaleString()}`;
+        document.getElementById('bsTotalAsset').textContent = `${currentCurrency}${balance.toLocaleString()}`;
+
+        localStorage.setItem('ss_transactions', JSON.stringify(transactions));
+        localStorage.setItem('ss_categories', JSON.stringify(categories));
+        localStorage.setItem('ss_budgets', JSON.stringify(categoryBudgets));
     }
 
-    form.addEventListener('submit', (e) => {
+    const txForm = document.getElementById('txForm');
+    txForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const newTransaction = {
-            title: titleInput.value,
-            amount: amountInput.value,
-            type: typeInput.value
-        };
-        transactions.push(newTransaction);
-        titleInput.value = '';
-        amountInput.value = '';
+        const title = document.getElementById('txTitle').value;
+        const amount = document.getElementById('txAmount').value;
+        const type = document.getElementById('txType').value;
+        const category = document.getElementById('txCategory').value;
+        const editIndex = document.getElementById('editIndex').value;
+
+        if (editIndex === '') {
+            transactions.unshift({ title, amount, type, category });
+        } else {
+            transactions[editIndex] = { title, amount, type, category };
+            document.getElementById('editIndex').value = '';
+            document.getElementById('formSubmitBtn').textContent = 'Add Transaction';
+        }
+
+        txForm.reset();
         updateUI();
     });
+
+    function editTransaction(index) {
+        const t = transactions[index];
+        document.getElementById('txTitle').value = t.title;
+        document.getElementById('txAmount').value = t.amount;
+        document.getElementById('txType').value = t.type;
+        document.getElementById('txCategory').value = t.category;
+        document.getElementById('editIndex').value = index;
+        document.getElementById('formSubmitBtn').textContent = 'Update Transaction';
+        switchTab('transactions', document.querySelectorAll('.nav-item')[1]);
+    }
+
+    function deleteTransaction(index) {
+        if (confirm('Delete this transaction?')) {
+            transactions.splice(index, 1);
+            updateUI();
+        }
+    }
+
+    function updateBudgetLimit(cat, val) {
+        categoryBudgets[cat] = parseFloat(val) || 0;
+        localStorage.setItem('ss_budgets', JSON.stringify(categoryBudgets));
+    }
+
+    function addCategory() {
+        const input = document.getElementById('newCatInput');
+        if (input.value.trim() !== '') {
+            categories.push(input.value.trim());
+            categoryBudgets[input.value.trim()] = 1000;
+            input.value = '';
+            updateUI();
+        }
+    }
+
+    function deleteCategory(index) {
+        categories.splice(index, 1);
+        updateUI();
+    }
 
     updateUI();
 </script>
