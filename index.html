@@ -26,7 +26,7 @@
         .container {
             width: 100%;
             max-width: 400px;
-            padding-bottom: 70px;
+            padding-bottom: 75px;
         }
         h1 {
             font-size: 1.3rem;
@@ -34,7 +34,7 @@
             margin-bottom: 12px;
             color: var(--accent-blue);
         }
-        /* Bottom Navigation Tabs */
+        /* Fancy Bottom Navigation Tabs with Icons */
         .nav-bar {
             position: fixed;
             bottom: 0;
@@ -44,17 +44,24 @@
             border-top: 1px solid var(--border-color);
             display: flex;
             justify-content: space-around;
-            padding: 8px 0;
+            padding: 6px 0;
             z-index: 1000;
         }
         .nav-item {
             background: none;
             border: none;
             color: #94a3b8;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             cursor: pointer;
             text-align: center;
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        .nav-icon {
+            font-size: 1.1rem;
         }
         .nav-item.active {
             color: var(--accent-pink);
@@ -305,13 +312,23 @@
 
 </div>
 
-<!-- BOTTOM NAVIGATION -->
+<!-- FANCY BOTTOM NAVIGATION WITH SYMBOLS -->
 <div class="nav-bar">
-    <button class="nav-item active" onclick="switchTab('dashboard', this)">Dashboard</button>
-    <button class="nav-item" onclick="switchTab('transactions', this)">Transactions</button>
-    <button class="nav-item" onclick="switchTab('budgets', this)">Budgets</button>
-    <button class="nav-item" onclick="switchTab('categories', this)">Categories</button>
-    <button class="nav-item" onclick="switchTab('audit', this)">Audit</button>
+    <button class="nav-item active" onclick="switchTab('dashboard', this)">
+        <span class="nav-icon">🏠</span> Dashboard
+    </button>
+    <button class="nav-item" onclick="switchTab('transactions', this)">
+        <span class="nav-icon">💳</span> Transactions
+    </button>
+    <button class="nav-item" onclick="switchTab('budgets', this)">
+        <span class="nav-icon">🎯</span> Budgets
+    </button>
+    <button class="nav-item" onclick="switchTab('categories', this)">
+        <span class="nav-icon">🏷️</span> Categories
+    </button>
+    <button class="nav-item" onclick="switchTab('audit', this)">
+        <span class="nav-icon">📊</span> Audit
+    </button>
 </div>
 
 <script>
@@ -522,3 +539,4 @@
 
 </body>
 </html>
+
