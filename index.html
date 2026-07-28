@@ -26,7 +26,7 @@
         .container {
             width: 100%;
             max-width: 400px;
-            padding-bottom: 50px;
+            padding-bottom: 90px; /* Space for floating bar */
         }
         .top-header {
             display: flex;
@@ -132,6 +132,39 @@
             align-items: center;
             border: 1px solid var(--border-color);
         }
+        /* Floating Bottom Toolbar */
+        .floating-toolbar {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 360px;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .tool-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        .tool-btn.active {
+            color: var(--accent-gold);
+        }
     </style>
 </head>
 <body>
@@ -184,6 +217,22 @@
     <div id="transactionListContainer"></div>
 </div>
 
+<!-- Floating Bottom Toolbar -->
+<div class="floating-toolbar">
+    <button class="tool-btn active" onclick="scrollToTop()">
+        <span>🏠</span>
+        <span id="navHome">Home</span>
+    </button>
+    <button class="tool-btn" onclick="focusInput()">
+        <span>➕</span>
+        <span id="navAdd">Add</span>
+    </button>
+    <button class="tool-btn" onclick="clearData()">
+        <span>🗑️</span>
+        <span id="navClear">Reset</span>
+    </button>
+</div>
+
 <script>
     let currentLang = localStorage.getItem('smart_spends_lang') || 'en';
     document.getElementById('langSelect').value = currentLang;
@@ -203,7 +252,10 @@
             lblTxName: "Description",
             lblTxAmount: "Amount",
             addTxBtn: "Add Transaction",
-            lblHistory: "Transaction History"
+            lblHistory: "Transaction History",
+            navHome: "Home",
+            navAdd: "Add",
+            navClear: "Reset"
         },
         hi: {
             title: "स्मार्ट स्पेंड्स",
@@ -214,7 +266,10 @@
             lblTxName: "विवरण",
             lblTxAmount: "राशि",
             addTxBtn: "लेनदेन जोड़ें",
-            lblHistory: "लेनदेन का इतिहास"
+            lblHistory: "लेनदेन का इतिहास",
+            navHome: "होम",
+            navAdd: "जोड़ें",
+            navClear: "रीसेट"
         },
         ar: {
             title: "المصروف الذكي",
@@ -225,7 +280,10 @@
             lblTxName: "الوصف",
             lblTxAmount: "المبلغ",
             addTxBtn: "إضافة معاملة",
-            lblHistory: "سجل المعاملات"
+            lblHistory: "سجل المعاملات",
+            navHome: "الرئيسية",
+            navAdd: "إضافة",
+            navClear: "إعادة ضبط"
         }
     };
 
@@ -246,6 +304,24 @@
         document.getElementById('lblTxAmount').textContent = t.lblTxAmount;
         document.getElementById('addTxBtn').textContent = t.addTxBtn;
         document.getElementById('lblHistory').textContent = t.lblHistory;
+        document.getElementById('navHome').textContent = t.navHome;
+        document.getElementById('navAdd').textContent = t.navAdd;
+        document.getElementById('navClear').textContent = t.navClear;
+    }
+
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function focusInput() {
+        document.getElementById('txNameInput').focus();
+    }
+
+    function clearData() {
+        if (confirm(currentLang === 'hi' ? 'क्या आप सभी डेटा रीसेट करना चाहते हैं?' : 'Are you sure you want to reset all data?')) {
+            transactions = [];
+            updateUI();
+        }
     }
 
     function addTransaction() {
