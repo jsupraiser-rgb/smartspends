@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartSpends - Budget & Expense Tracker</title>
+    <title>SmartSpends - Budget & Expense Manager</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -26,7 +26,7 @@
         .container {
             width: 100%;
             max-width: 400px;
-            padding-bottom: 60px;
+            padding-bottom: 50px;
         }
         .top-header {
             display: flex;
@@ -39,43 +39,50 @@
             margin: 0;
             color: var(--accent-gold);
         }
-        .controls-group {
-            display: flex;
-            gap: 6px;
-        }
-        .select-box {
+        .lang-select {
             background-color: #090d16;
             color: var(--accent-gold);
             border: 1px solid var(--border-color);
-            padding: 4px 6px;
+            padding: 4px 8px;
             border-radius: 6px;
             font-size: 0.75rem;
             outline: none;
         }
-        /* Dashboard Summary Cards */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-        .dash-card {
+        .balance-card {
             background: linear-gradient(135deg, #1e293b, #0f172a);
-            padding: 14px;
-            border-radius: 14px;
+            padding: 20px;
+            border-radius: 16px;
             border: 1px solid var(--border-color);
             text-align: center;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
-        .dash-title {
+        .balance-amount {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--accent-gold);
+            margin: 8px 0;
+        }
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+        }
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+        .stat-label {
             font-size: 0.75rem;
             color: #94a3b8;
             text-transform: uppercase;
-            margin-bottom: 4px;
         }
-        .dash-val {
-            font-size: 1.3rem;
+        .stat-val {
+            font-size: 1rem;
             font-weight: bold;
-            color: var(--accent-gold);
+            margin-top: 4px;
         }
         .box {
             background-color: var(--card-bg);
@@ -100,7 +107,7 @@
             background-color: #090d16;
             color: var(--text-color);
             box-sizing: border-box;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             outline: none;
         }
         .action-btn {
@@ -132,116 +139,93 @@
 <div class="container">
     <div class="top-header">
         <h1 id="appTitle">SmartSpends</h1>
-        <div class="controls-group">
-            <select id="currencySelect" class="select-box" onchange="changeCurrency(this.value)">
-                <option value="$">$ USD</option>
-                <option value="₹">₹ INR</option>
-                <option value="€">€ EUR</option>
-                <option value="£">£ GBP</option>
-            </select>
-            <select id="langSelect" class="select-box" onchange="changeLanguage(this.value)">
-                <option value="en">EN</option>
-                <option value="hi">HI</option>
-                <option value="ar">AR</option>
-            </select>
-        </div>
+        <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+            <option value="ar">العربية</option>
+        </select>
     </div>
 
-    <!-- Dashboard Summary -->
-    <div class="dashboard-grid">
-        <div class="dash-card">
-            <div class="dash-title" id="lblTotalSpent">Total Spent</div>
-            <div class="dash-val" id="totalSpentVal">$0.00</div>
-        </div>
-        <div class="dash-card">
-            <div class="dash-title" id="lblBudgetStatus">Budget Limit</div>
-            <div class="dash-val" id="budgetLimitVal" style="color: var(--accent-green);">Set Limit</div>
+    <!-- Balance Summary Card -->
+    <div class="balance-card">
+        <div style="font-size: 0.8rem; color: #94a3b8; text-transform: uppercase;" id="lblTotalBalance">Total Balance</div>
+        <div class="balance-amount" id="netBalance">$0.00</div>
+        <div class="stats-row">
+            <div class="stat-item" style="border-right: 1px solid var(--border-color);">
+                <div class="stat-label" id="lblIncome">Income</div>
+                <div class="stat-val" id="totalIncome" style="color: var(--accent-green);">+$0.00</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label" id="lblExpenses">Expenses</div>
+                <div class="stat-val" id="totalExpenses" style="color: var(--accent-red);">-$0.00</div>
+            </div>
         </div>
     </div>
 
     <!-- Add Transaction Box -->
     <div class="box">
-        <label id="lblTxName">Transaction Title</label>
-        <input type="text" id="txNameInput" placeholder="e.g. Groceries, Coffee">
-
-        <label id="lblTxAmount">Amount</label>
-        <input type="number" id="txAmountInput" placeholder="e.g. 25.50" step="any">
-
-        <label id="lblTxCategory">Category</label>
-        <select id="txCategoryInput">
-            <option value="Food">🍔 Food & Dining</option>
-            <option value="Bills">💡 Bills & Utilities</option>
-            <option value="Shopping">🛍️ Shopping</option>
-            <option value="Transport">🚗 Transport</option>
-            <option value="Other">📦 Other</option>
+        <label id="lblTxType">Transaction Type</label>
+        <select id="txTypeInput">
+            <option value="income">Income (+)</option>
+            <option value="expense" selected>Expense (-)</option>
         </select>
 
-        <button class="action-btn" onclick="addTransaction()" id="addTxBtn">Add Expense</button>
-    </div>
+        <label id="lblTxName">Description</label>
+        <input type="text" id="txNameInput" placeholder="e.g. Salary, Groceries">
 
-    <!-- Budget Limit Manager -->
-    <div class="box" style="padding: 12px;">
-        <label id="lblSetBudget">Set Monthly Budget Limit</label>
-        <div style="display: flex; gap: 8px;">
-            <input type="number" id="budgetInput" placeholder="e.g. 500" style="margin-bottom:0;">
-            <button class="action-btn" onclick="saveBudget()" id="saveBudgetBtn" style="width: 100px; padding: 0; font-size: 0.85rem;">Save</button>
-        </div>
+        <label id="lblTxAmount">Amount</label>
+        <input type="number" id="txAmountInput" placeholder="e.g. 150" step="any" required>
+
+        <button class="action-btn" onclick="addTransaction()" id="addTxBtn">Add Transaction</button>
     </div>
 
     <!-- Transaction History List -->
-    <div style="font-size: 0.85rem; font-weight: bold; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase;" id="lblHistory">Recent Transactions</div>
+    <div style="font-size: 0.85rem; font-weight: bold; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase;" id="lblHistory">Transaction History</div>
     <div id="transactionListContainer"></div>
 </div>
 
 <script>
     let currentLang = localStorage.getItem('smart_spends_lang') || 'en';
-    let currentCurrency = localStorage.getItem('smart_spends_curr') || '$';
-    let monthlyBudget = parseFloat(localStorage.getItem('smart_spends_budget')) || 0;
-    
     document.getElementById('langSelect').value = currentLang;
-    document.getElementById('currencySelect').value = currentCurrency;
 
-    let transactions = JSON.parse(localStorage.getItem('smart_spends_list')) || [
-        { name: 'Coffee & Snacks', amount: 5.50, category: 'Food', date: 'Today' },
-        { name: 'Monthly Internet', amount: 45.00, category: 'Bills', date: 'Yesterday' }
+    let transactions = JSON.parse(localStorage.getItem('smart_spends_data')) || [
+        { name: 'Monthly Salary', amount: 2500, type: 'income' },
+        { name: 'Groceries & Supplies', amount: 85, type: 'expense' }
     ];
 
     const translations = {
         en: {
             title: "SmartSpends",
-            lblTotalSpent: "Total Spent",
-            lblBudgetStatus: "Budget Limit",
-            lblTxName: "Transaction Title",
+            lblTotalBalance: "Total Balance",
+            lblIncome: "Income",
+            lblExpenses: "Expenses",
+            lblTxType: "Transaction Type",
+            lblTxName: "Description",
             lblTxAmount: "Amount",
-            lblTxCategory: "Category",
-            addTxBtn: "Add Expense",
-            lblSetBudget: "Set Monthly Budget Limit",
-            saveBudgetBtn: "Save",
-            lblHistory: "Recent Transactions"
+            addTxBtn: "Add Transaction",
+            lblHistory: "Transaction History"
         },
         hi: {
             title: "स्मार्ट स्पेंड्स",
-            lblTotalSpent: "कुल खर्च",
-            lblBudgetStatus: "बजट सीमा",
-            lblTxName: "लेनदेन का नाम",
+            lblTotalBalance: "कुल शेष राशि",
+            lblIncome: "आय",
+            lblExpenses: "खर्च",
+            lblTxType: "लेनदेन का प्रकार",
+            lblTxName: "विवरण",
             lblTxAmount: "राशि",
-            lblTxCategory: "श्रेणी",
-            addTxBtn: "खर्च जोड़ें",
-            lblSetBudget: "मासिक बजट सीमा सेट करें",
-            saveBudgetBtn: "सहेजें",
-            lblHistory: "हाल के लेन-देन"
+            addTxBtn: "लेनदेन जोड़ें",
+            lblHistory: "लेनदेन का इतिहास"
         },
         ar: {
             title: "المصروف الذكي",
-            lblTotalSpent: "إجمالي المصروفات",
-            lblBudgetStatus: "حد الميزانية",
-            lblTxName: "عنوان المعاملة",
+            lblTotalBalance: "إجمالي الرصيد",
+            lblIncome: "الدخل",
+            lblExpenses: "المصروفات",
+            lblTxType: "نوع المعاملة",
+            lblTxName: "الوصف",
             lblTxAmount: "المبلغ",
-            lblTxCategory: "الفئة",
-            addTxBtn: "إضافة مصروف",
-            lblSetBudget: "تعيين حد الميزانية الشهرية",
-            saveBudgetBtn: "حفظ",
-            lblHistory: "المعاملات الأخيرة"
+            addTxBtn: "إضافة معاملة",
+            lblHistory: "سجل المعاملات"
         }
     };
 
@@ -251,47 +235,30 @@
         applyTranslations();
     }
 
-    function changeCurrency(curr) {
-        currentCurrency = curr;
-        localStorage.setItem('smart_spends_curr', curr);
-        updateUI();
-    }
-
     function applyTranslations() {
         let t = translations[currentLang] || translations['en'];
         document.getElementById('appTitle').textContent = t.title;
-        document.getElementById('lblTotalSpent').textContent = t.lblTotalSpent;
-        document.getElementById('lblBudgetStatus').textContent = t.lblBudgetStatus;
+        document.getElementById('lblTotalBalance').textContent = t.lblTotalBalance;
+        document.getElementById('lblIncome').textContent = t.lblIncome;
+        document.getElementById('lblExpenses').textContent = t.lblExpenses;
+        document.getElementById('lblTxType').textContent = t.lblTxType;
         document.getElementById('lblTxName').textContent = t.lblTxName;
         document.getElementById('lblTxAmount').textContent = t.lblTxAmount;
-        document.getElementById('lblTxCategory').textContent = t.lblTxCategory;
         document.getElementById('addTxBtn').textContent = t.addTxBtn;
-        document.getElementById('lblSetBudget').textContent = t.lblSetBudget;
-        document.getElementById('saveBudgetBtn').textContent = t.saveBudgetBtn;
         document.getElementById('lblHistory').textContent = t.lblHistory;
-    }
-
-    function saveBudget() {
-        let val = parseFloat(document.getElementById('budgetInput').value);
-        if (!isNaN(val)) {
-            monthlyBudget = val;
-            localStorage.setItem('smart_spends_budget', monthlyBudget);
-            document.getElementById('budgetInput').value = '';
-            updateUI();
-        }
     }
 
     function addTransaction() {
         let name = document.getElementById('txNameInput').value.trim();
         let amount = parseFloat(document.getElementById('txAmountInput').value);
-        let category = document.getElementById('txCategoryInput').value;
+        let type = document.getElementById('txTypeInput').value;
 
         if (!name || isNaN(amount) || amount <= 0) {
-            alert(currentLang === 'hi' ? 'कृपया सही विवरण दर्ज करें' : 'Please enter valid transaction details');
+            alert(currentLang === 'hi' ? 'कृपया सही मान दर्ज करें' : 'Please enter valid transaction details');
             return;
         }
 
-        transactions.unshift({ name, amount, category, date: 'Just now' });
+        transactions.unshift({ name, amount, type });
         document.getElementById('txNameInput').value = '';
         document.getElementById('txAmountInput').value = '';
         updateUI();
@@ -303,38 +270,39 @@
     }
 
     function updateUI() {
-        let totalSpent = transactions.reduce((sum, tx) => sum + tx.amount, 0);
-        document.getElementById('totalSpentVal').textContent = `${currentCurrency}${totalSpent.toFixed(2)}`;
-
-        let limitEl = document.getElementById('budgetLimitVal');
-        if (monthlyBudget > 0) {
-            limitEl.textContent = `${currentCurrency}${monthlyBudget}`;
-            if (totalSpent > monthlyBudget) {
-                limitEl.style.color = 'var(--accent-red)';
-            } else {
-                limitEl.style.color = 'var(--accent-green)';
-            }
-        } else {
-            limitEl.textContent = currentLang === 'hi' ? 'कोई सीमा नहीं' : 'No Limit';
-        }
-
+        let income = 0;
+        let expenses = 0;
         let html = '';
+
         transactions.forEach((tx, idx) => {
+            if (tx.type === 'income') {
+                income += tx.amount;
+            } else {
+                expenses += tx.amount;
+            }
+
             html += `
                 <div class="transaction-item">
                     <div>
-                        <strong style="font-size: 0.95rem; display:block;">${tx.name}</strong>
-                        <span style="color: #94a3b8; font-size: 0.75rem;">${tx.category} • ${tx.date}</span>
+                        <strong style="font-size: 0.95rem; display: block;">${tx.name}</strong>
                     </div>
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-weight: bold; color: var(--accent-red);">-${currentCurrency}${tx.amount.toFixed(2)}</span>
+                        <span style="font-weight: bold; color: ${tx.type === 'income' ? 'var(--accent-green)' : 'var(--accent-red)'};">
+                            ${tx.type === 'income' ? '+' : '-'}$${tx.amount.toFixed(2)}
+                        </span>
                         <button onclick="deleteTransaction(${idx})" style="background: #ef4444; color: #fff; border: none; padding: 2px 6px; border-radius: 4px; cursor: pointer; font-size: 0.7rem;">✕</button>
                     </div>
                 </div>
             `;
         });
+
+        let balance = income - expenses;
+        document.getElementById('netBalance').textContent = `$${balance.toFixed(2)}`;
+        document.getElementById('totalIncome').textContent = `+$${income.toFixed(2)}`;
+        document.getElementById('totalExpenses').textContent = `-$${expenses.toFixed(2)}`;
+
         document.getElementById('transactionListContainer').innerHTML = html || '<p style="text-align:center; color:#94a3b8; font-size:0.85rem;">No transactions recorded.</p>';
-        localStorage.setItem('smart_spends_list', JSON.stringify(transactions));
+        localStorage.setItem('smart_spends_data', JSON.stringify(transactions));
     }
 
     applyTranslations();
