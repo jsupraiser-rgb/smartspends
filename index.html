@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartSpends - Budget Tracker</title>
+    <title>SmartSpends - Budget & Expense Tracker</title>
     <style>
         :root {
-            --bg-color: #064e3b;
-            --card-bg: #065f46;
-            --text-color: #f0fdf4;
-            --accent-green: #34d399;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
             --accent-gold: #fbbf24;
+            --accent-green: #34d399;
             --accent-red: #ef4444;
-            --accent-blue: #38bdf8;
-            --border-color: #047857;
+            --border-color: #334155;
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -27,196 +26,96 @@
         .container {
             width: 100%;
             max-width: 400px;
-            padding-bottom: 75px;
+            padding-bottom: 60px;
         }
         .top-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
         }
         h1 {
             font-size: 1.3rem;
             margin: 0;
             color: var(--accent-gold);
         }
-        /* Smaller width for language dropdown */
-        .lang-select {
-            background-color: #022c22;
+        .controls-group {
+            display: flex;
+            gap: 6px;
+        }
+        .select-box {
+            background-color: #090d16;
             color: var(--accent-gold);
             border: 1px solid var(--border-color);
-            padding: 3px 6px;
+            padding: 4px 6px;
             border-radius: 6px;
-            font-size: 0.72rem;
-            width: auto;
-            max-width: 110px;
+            font-size: 0.75rem;
             outline: none;
         }
-        /* Fancy Bottom Navigation Tabs */
-        .nav-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: #022c22;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-around;
-            padding: 6px 0;
-            z-index: 1000;
-        }
-        .nav-item {
-            background: none;
-            border: none;
-            color: #9ca3af;
-            font-size: 0.65rem;
-            cursor: pointer;
-            text-align: center;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-        }
-        .nav-icon {
-            font-size: 1.1rem;
-        }
-        .nav-item.active {
-            color: var(--accent-gold);
-            font-weight: bold;
-        }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        /* Hero Card */
-        .hero-card {
-            background: linear-gradient(135deg, #047857, #065f46);
-            padding: 20px;
-            border-radius: 16px;
-            color: #fff;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(52, 211, 153, 0.2);
-            border: 1px solid #10b981;
-        }
-        .hero-title {
-            font-size: 0.9rem;
-            font-weight: bold;
-            letter-spacing: 1px;
-            opacity: 0.95;
-            margin-bottom: 6px;
-            color: var(--accent-gold);
-        }
-        .hero-balance {
-            font-size: 2.2rem;
-            font-weight: bold;
-            margin-bottom: 14px;
-            color: var(--accent-gold);
-        }
-        .hero-grid {
+        /* Dashboard Summary Cards */
+        .dashboard-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            font-size: 0.85rem;
-            border-top: 1px solid rgba(255,255,255,0.2);
-            padding-top: 10px;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
         }
-        .hero-grid div span {
-            display: block;
-            font-size: 0.78rem;
-            font-weight: 500;
-            opacity: 0.9;
-        }
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-        }
-        .section-title {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: var(--accent-gold);
-        }
-        /* Round, red button for Set Budget */
-        .btn-red-round {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: #fff;
-            border: none;
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            font-weight: bold;
-            font-size: 1.1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
-            transition: all 0.2s ease;
-        }
-        .btn-red-round:active {
-            transform: scale(0.92);
-        }
-        .box {
-            background-color: var(--card-bg);
+        .dash-card {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
             padding: 14px;
             border-radius: 14px;
             border: 1px solid var(--border-color);
-            margin-bottom: 14px;
+            text-align: center;
         }
-        .progress-card {
-            background-color: var(--card-bg);
-            padding: 14px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 10px;
-        }
-        .progress-header {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.95rem;
-            margin-bottom: 6px;
-            font-weight: bold;
-        }
-        .progress-bar-bg {
-            background-color: #047857;
-            border-radius: 6px;
-            height: 8px;
-            width: 100%;
-            overflow: hidden;
+        .dash-title {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
             margin-bottom: 4px;
         }
-        .progress-bar-fill {
-            background-color: var(--accent-gold);
-            height: 100%;
-            border-radius: 6px;
+        .dash-val {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--accent-gold);
         }
-        .progress-footer {
-            font-size: 0.82rem;
-            font-weight: 500;
-            color: #e5e7eb;
+        .box {
+            background-color: var(--card-bg);
+            padding: 16px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 16px;
         }
-        input, select, button {
+        label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            display: block;
+            margin-bottom: 4px;
+        }
+        input, select {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
-            background-color: #022c22;
+            background-color: #090d16;
             color: var(--text-color);
             box-sizing: border-box;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            outline: none;
         }
-        button.action-btn {
-            background-color: var(--accent-gold);
-            color: #064e3b;
+        .action-btn {
+            background: linear-gradient(135deg, #fbbf24, #d97706);
+            color: #0f172a;
             font-weight: bold;
             cursor: pointer;
             border: none;
+            width: 100%;
+            padding: 11px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 10px rgba(251, 191, 36, 0.3);
         }
-        .list-card {
+        .transaction-item {
             background-color: var(--card-bg);
             padding: 12px;
             border-radius: 10px;
@@ -226,827 +125,219 @@
             align-items: center;
             border: 1px solid var(--border-color);
         }
-        .list-card div span {
-            display: block;
-            font-size: 0.82rem;
-            font-weight: 500;
-            color: #e5e7eb;
-        }
-        .btn-group button {
-            width: auto;
-            padding: 4px 8px;
-            margin-left: 4px;
-            font-size: 0.75rem;
-        }
-        .edit-btn { background-color: var(--accent-gold); color: #064e3b; font-weight: bold; }
-        .del-btn { background-color: #ef4444; color: #fff; font-weight: bold; }
-        
-        /* Modal Popup */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-        .modal-content {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 16px;
-            width: 90%;
-            max-width: 350px;
-            border: 1px solid var(--border-color);
-        }
-
-        .tally-table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            font-size: 0.9rem;
-        }
-        .tally-table th, .tally-table td {
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            text-align: left;
-        }
-        .tally-table th {
-            background-color: #047857;
-            color: var(--accent-gold);
-        }
-        .tally-total {
-            font-weight: bold;
-            background-color: #022c22;
-        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="top-header">
-        <h1>SmartSpends</h1>
-        <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
-            <option value="en">English</option>
-            <option value="hi">हिंदी</option>
-            <option value="mr">मराठी</option>
-            <option value="gu">ગુજરાતી</option>
-            <option value="bn">বাংলা</option>
-            <option value="pa">ਪੰਜਾਬੀ</option>
-            <option value="ta">தமிழ்</option>
-            <option value="te">తెలుగు</option>
-            <option value="ur">اردو</option>
-            <option value="ru">Русский</option>
-            <option value="zh">中文</option>
-            <option value="es">Español</option>
-            <option value="fr">Français</option>
-            <option value="de">Deutsch</option>
-            <option value="ja">日本語</option>
-            <option value="ar">العربية</option>
+        <h1 id="appTitle">SmartSpends</h1>
+        <div class="controls-group">
+            <select id="currencySelect" class="select-box" onchange="changeCurrency(this.value)">
+                <option value="$">$ USD</option>
+                <option value="₹">₹ INR</option>
+                <option value="€">€ EUR</option>
+                <option value="£">£ GBP</option>
+            </select>
+            <select id="langSelect" class="select-box" onchange="changeLanguage(this.value)">
+                <option value="en">EN</option>
+                <option value="hi">HI</option>
+                <option value="ar">AR</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Dashboard Summary -->
+    <div class="dashboard-grid">
+        <div class="dash-card">
+            <div class="dash-title" id="lblTotalSpent">Total Spent</div>
+            <div class="dash-val" id="totalSpentVal">$0.00</div>
+        </div>
+        <div class="dash-card">
+            <div class="dash-title" id="lblBudgetStatus">Budget Limit</div>
+            <div class="dash-val" id="budgetLimitVal" style="color: var(--accent-green);">Set Limit</div>
+        </div>
+    </div>
+
+    <!-- Add Transaction Box -->
+    <div class="box">
+        <label id="lblTxName">Transaction Title</label>
+        <input type="text" id="txNameInput" placeholder="e.g. Groceries, Coffee">
+
+        <label id="lblTxAmount">Amount</label>
+        <input type="number" id="txAmountInput" placeholder="e.g. 25.50" step="any">
+
+        <label id="lblTxCategory">Category</label>
+        <select id="txCategoryInput">
+            <option value="Food">🍔 Food & Dining</option>
+            <option value="Bills">💡 Bills & Utilities</option>
+            <option value="Shopping">🛍️ Shopping</option>
+            <option value="Transport">🚗 Transport</option>
+            <option value="Other">📦 Other</option>
         </select>
+
+        <button class="action-btn" onclick="addTransaction()" id="addTxBtn">Add Expense</button>
     </div>
 
-    <!-- TAB 1: DASHBOARD -->
-    <div id="tab-dashboard" class="tab-content active">
-        <div class="hero-card">
-            <div class="hero-title" id="lblTrackerTitle">SAVEIT · BUDGET TRACKER</div>
-            <div style="font-size:0.85rem; font-weight:600; margin-bottom:2px; opacity:0.95;" id="lblCurrentBalance">Current Balance</div>
-            <div class="hero-balance" id="dashBalance">0</div>
-            <div class="hero-grid">
-                <div><span id="lblIncome">↓ Income</span><strong id="dashIncome" style="color:#34d399;">0</strong></div>
-                <div><span id="lblExpenses">↑ Expenses</span><strong id="dashExpense" style="color:#f87171;">0</strong></div>
-                <div><span id="lblSaved">📈 Saved</span><strong id="dashSaved">0%</strong></div>
-            </div>
+    <!-- Budget Limit Manager -->
+    <div class="box" style="padding: 12px;">
+        <label id="lblSetBudget">Set Monthly Budget Limit</label>
+        <div style="display: flex; gap: 8px;">
+            <input type="number" id="budgetInput" placeholder="e.g. 500" style="margin-bottom:0;">
+            <button class="action-btn" onclick="saveBudget()" id="saveBudgetBtn" style="width: 100px; padding: 0; font-size: 0.85rem;">Save</button>
         </div>
-
-        <div class="section-header">
-            <div class="section-title" id="lblCatBreakdown">Category Breakdown</div>
-        </div>
-        <div id="categoryBreakdownList"></div>
     </div>
 
-    <!-- TAB 2: TRANSACTIONS -->
-    <div id="tab-transactions" class="tab-content">
-        <div class="section-title" style="margin-bottom:12px;" id="lblManageTx">Manage Transactions</div>
-        <form id="txForm">
-            <input type="hidden" id="editIndex" value="">
-            <input type="text" id="txTitle" placeholder="Description (e.g. Groceries)" required>
-            <input type="number" id="txAmount" placeholder="Amount" step="any" required>
-            <select id="txType">
-                <option value="expense" id="optExpense">Expense</option>
-                <option value="income" id="optIncome">Income</option>
-            </select>
-            <select id="txCategory"></select>
-            <button type="submit" class="action-btn" id="formSubmitBtn">Add Transaction</button>
-        </form>
-        <ul id="txList" style="list-style:none; padding:0; margin:0;"></ul>
-    </div>
-
-    <!-- TAB 3: BUDGETS -->
-    <div id="tab-budgets" class="tab-content">
-        <div class="section-header">
-            <div class="section-title" id="lblBudgetsTitle">Budgets</div>
-            <button class="btn-red-round" onclick="openBudgetModal()" title="Set Budget">+</button>
-        </div>
-        
-        <div class="progress-card" id="totalBudgetCard">
-            <div class="progress-header">
-                <span id="lblTotalBudget">Total Budget</span>
-                <span id="totalBudgetValues">0 of 0</span>
-            </div>
-            <div class="progress-bar-bg">
-                <div class="progress-bar-fill" id="totalbarFill" style="width: 0%;"></div>
-            </div>
-        </div>
-
-        <div id="budgetsListContainer"></div>
-    </div>
-
-    <!-- TAB 4: CATEGORIES & SETTINGS -->
-    <div id="tab-categories" class="tab-content">
-        <!-- Country Selection Section -->
-        <div class="section-title" style="margin-bottom:12px;" id="lblCountrySection">Select Country</div>
-        <div class="box">
-            <label style="font-size:0.85rem; font-weight:600; color:#f3f4f6;" id="lblCountryLabel">Your Country / Region</label>
-            <select id="countrySelect" onchange="onCountryChange(this.value)">
-                <option value="AE">United Arab Emirates (UAE)</option>
-                <option value="IN">India</option>
-                <option value="US">United States</option>
-                <option value="GB">United Kingdom</option>
-                <option value="EU">European Union</option>
-                <option value="JP">Japan</option>
-                <option value="CN">China</option>
-                <option value="AU">Australia</option>
-                <option value="CA">Canada</option>
-                <option value="RU">Russia</option>
-                <option value="OTHER">Other Country / Custom</option>
-            </select>
-        </div>
-
-        <!-- Currency Selection Section -->
-        <div class="section-title" style="margin-bottom:12px;" id="lblCurrencySection">Select Currency</div>
-        <div class="box">
-            <label style="font-size:0.85rem; font-weight:600; color:#f3f4f6;" id="lblCurrencyLabel">Choose Currency Symbol</label>
-            <select id="currencySelect" onchange="onCurrencySelectChange(this.value)">
-                <option value="د.إ">د.إ (AED - UAE Dirham)</option>
-                <option value="₹">₹ (INR - Indian Rupee)</option>
-                <option value="$">$ (USD - US Dollar)</option>
-                <option value="€">€ (EUR - Euro)</option>
-                <option value="£">£ (GBP - British Pound)</option>
-                <option value="¥">¥ (JPY/CNY - Yen / Yuan)</option>
-                <option value="A$">A$ (AUD - Australian Dollar)</option>
-                <option value="C$">C$ (CAD - Canadian Dollar)</option>
-                <option value="₽">₽ (RUB - Russian Ruble)</option>
-            </select>
-
-            <label style="font-size:0.85rem; font-weight:600; color:#f3f4f6; margin-top:10px; display:block;" id="lblCustomCurrency">Or Type Custom Symbol/Code</label>
-            <input type="text" id="customCurrencyInput" placeholder="e.g. Kč, R$, Rp, kr, ₦" oninput="applyCustomCurrency(this.value)">
-        </div>
-
-        <div class="section-title" style="margin-bottom:12px;" id="lblCategoriesLimits">Categories & Limits</div>
-        <form id="catForm" class="box" style="margin-bottom:14px;">
-            <input type="hidden" id="editCatIndex" value="">
-            <input type="text" id="catNameInput" placeholder="Category Name (e.g. Dining)" required style="margin-bottom:10px;">
-            <input type="number" id="catLimitInput" placeholder="Initial Monthly Limit" step="any" required style="margin-bottom:10px;">
-            <button type="submit" class="action-btn" id="catSubmitBtn">Add Category</button>
-        </form>
-        <ul id="categoryList" style="list-style:none; padding:0; margin:0;"></ul>
-    </div>
-
-    <!-- TAB 5: AUDIT (TALLY STYLE) -->
-    <div id="tab-audit" class="tab-content">
-        <div class="section-title" style="margin-bottom:12px;" id="lblAuditTitle">Audit Balance Sheet</div>
-        <table class="tally-table">
-            <thead>
-                <tr>
-                    <th id="lblLiabilities">Liabilities & Equity</th>
-                    <th id="lblAssets">Assets & Inflows</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><span id="lblNetCapital">Net Capital / Income</span><br><span id="bsEquity" style="color:#34d399; font-weight:bold;">0</span></td>
-                    <td><span id="lblCurrentCash">Current Cash Balance</span><br><span id="bsAsset" style="color:var(--accent-gold); font-weight:bold;">0</span></td>
-                </tr>
-                <tr class="tally-total">
-                    <td>Total: <span id="bsTotalLiab">0</span></td>
-                    <td>Total: <span id="bsTotalAsset">0</span></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-</div>
-
-<!-- SET BUDGET MODAL POPUP -->
-<div id="budgetModal" class="modal">
-    <div class="modal-content">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h3 style="margin:0; font-size:1.1rem; color:var(--accent-gold);" id="modalTitle">Set Budget</h3>
-            <span onclick="closeBudgetModal()" style="font-size:1.2rem; cursor:pointer; color:#d1d5db;">&times;</span>
-        </div>
-        <label style="font-size:0.85rem; font-weight:600; color:#f3f4f6;" id="modalLblCategory">Category</label>
-        <select id="modalCategorySelect" style="margin-bottom:10px;"></select>
-        
-        <label style="font-size:0.85rem; font-weight:600; color:#f3f4f6;" id="modalLblLimit">Monthly Limit (<span class="currSign">₹</span>)</label>
-        <input type="number" id="modalLimitInput" placeholder="e.g. 10000" style="margin-bottom:14px;" required>
-
-        <button class="action-btn" style="width:100%; padding:10px; margin-bottom:8px; font-size:0.9rem;" onclick="saveModalBudget()" id="modalBtnSave">Save Budget</button>
-        <button style="width:100%; background:transparent; border:1px solid var(--border-color); color:var(--text-color); padding:10px; border-radius:8px; cursor:pointer;" onclick="closeBudgetModal()" id="modalBtnCancel">Cancel</button>
-    </div>
-</div>
-
-<!-- FANCY BOTTOM NAVIGATION WITH SYMBOLS -->
-<div class="nav-bar">
-    <button class="nav-item active" onclick="switchTab('dashboard', this)">
-        <span class="nav-icon">🏠</span> <span id="navDash">Dashboard</span>
-    </button>
-    <button class="nav-item" onclick="switchTab('transactions', this)">
-        <span class="nav-icon">💳</span> <span id="navTx">Transactions</span>
-    </button>
-    <button class="nav-item" onclick="switchTab('budgets', this)">
-        <span class="nav-icon">🎯</span> <span id="navBudgets">Budgets</span>
-    </button>
-    <button class="nav-item" onclick="switchTab('categories', this)">
-        <span class="nav-icon">🏷️</span> <span id="navCategories">Categories</span>
-    </button>
-    <button class="nav-item" onclick="switchTab('audit', this)">
-        <span class="nav-icon">📊</span> <span id="navAudit">Audit</span>
-    </button>
+    <!-- Transaction History List -->
+    <div style="font-size: 0.85rem; font-weight: bold; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase;" id="lblHistory">Recent Transactions</div>
+    <div id="transactionListContainer"></div>
 </div>
 
 <script>
-    let currentCurrency = localStorage.getItem('ss_currency') || 'د.إ';
-    let currentCountry = localStorage.getItem('ss_country') || 'AE';
-    let currentLang = localStorage.getItem('ss_lang') || 'en';
-
-    let transactions = JSON.parse(localStorage.getItem('ss_transactions')) || [
-        { title: 'Housing Rent', amount: 1800, type: 'expense', category: 'Housing' },
-        { title: 'School Fees', amount: 1453, type: 'expense', category: "Kids' School" },
-        { title: 'Bike Fix', amount: 920, type: 'expense', category: 'Vehicle Repairs' },
-        { title: 'Monthly Salary', amount: 11062, type: 'income', category: 'Salary' }
-    ];
-    let categories = JSON.parse(localStorage.getItem('ss_categories')) || ['Housing', "Kids' School", 'Vehicle Repairs', 'House Repairs', 'Food', 'Salary', 'Utilities'];
-    let categoryBudgets = JSON.parse(localStorage.getItem('ss_budgets')) || { 'Housing': 2500, "Kids' School": 3000, 'Vehicle Repairs': 2000, 'House Repairs': 1000, 'Food': 500, 'Utilities': 3000 };
-
-    document.getElementById('countrySelect').value = currentCountry;
-    document.getElementById('currencySelect').value = ['د.إ', '₹', '$', '€', '£', '¥', 'A$', 'C$', '₽'].includes(currentCurrency) ? currentCurrency : '';
-    document.getElementById('customCurrencyInput').value = currentCurrency;
+    let currentLang = localStorage.getItem('smart_spends_lang') || 'en';
+    let currentCurrency = localStorage.getItem('smart_spends_curr') || '$';
+    let monthlyBudget = parseFloat(localStorage.getItem('smart_spends_budget')) || 0;
+    
     document.getElementById('langSelect').value = currentLang;
+    document.getElementById('currencySelect').value = currentCurrency;
 
-    const countryCurrencyMap = {
-        'AE': 'د.إ',
-        'IN': '₹',
-        'US': '$',
-        'GB': '£',
-        'EU': '€',
-        'JP': '¥',
-        'CN': '¥',
-        'AU': 'A$',
-        'CA': 'C$',
-        'RU': '₽'
-    };
+    let transactions = JSON.parse(localStorage.getItem('smart_spends_list')) || [
+        { name: 'Coffee & Snacks', amount: 5.50, category: 'Food', date: 'Today' },
+        { name: 'Monthly Internet', amount: 45.00, category: 'Bills', date: 'Yesterday' }
+    ];
 
     const translations = {
         en: {
-            dash: "Dashboard", tx: "Transactions", budgets: "Budgets", categories: "Categories", audit: "Audit",
-            trackerTitle: "SAVEIT · BUDGET TRACKER", currentBalance: "Current Balance", income: "↓ Income", expenses: "↑ Expenses", saved: "📈 Saved",
-            catBreakdown: "Category Breakdown", manageTx: "Manage Transactions", optExpense: "Expense", optIncome: "Income",
-            addTx: "Add Transaction", updateTx: "Update Transaction", setBudgetBtn: "+ Set Budget", totalBudget: "Total Budget",
-            countrySection: "Select Country", countryLabel: "Your Country / Region", currencySection: "Select Currency", currencyLabel: "Choose Currency Symbol",
-            customCurrency: "Or Type Custom Symbol/Code", categoriesLimits: "Categories & Limits", addCat: "Add Category", updateCat: "Update Category",
-            auditTitle: "Audit Balance Sheet", liabilities: "Liabilities & Equity", assets: "Assets & Inflows", netCapital: "Net Capital / Income", currentCash: "Current Cash Balance",
-            modalTitle: "Set Budget", modalCategory: "Category", modalLimit: "Monthly Limit", saveBudget: "Save Budget", cancel: "Cancel"
+            title: "SmartSpends",
+            lblTotalSpent: "Total Spent",
+            lblBudgetStatus: "Budget Limit",
+            lblTxName: "Transaction Title",
+            lblTxAmount: "Amount",
+            lblTxCategory: "Category",
+            addTxBtn: "Add Expense",
+            lblSetBudget: "Set Monthly Budget Limit",
+            saveBudgetBtn: "Save",
+            lblHistory: "Recent Transactions"
         },
         hi: {
-            dash: "डैशबोर्ड", tx: "लेन-देन", budgets: "बजट", categories: "श्रेणियाँ", audit: "ऑडिट",
-            trackerTitle: "सेवइट · बजट ट्रैकर", currentBalance: "वर्तमान शेष राशि", income: "↓ आय", expenses: "↑ खर्च", saved: "📈 बचत",
-            catBreakdown: "श्रेणीवार विवरण", manageTx: "लेन-देन प्रबंधित करें", optExpense: "खर्च", optIncome: "आय",
-            addTx: "लेन-देन जोड़ें", updateTx: "लेन-देन अपडेट करें", setBudgetBtn: "+ बजट सेट करें", totalBudget: "कुल बजट",
-            countrySection: "देश चुनें", countryLabel: "आपका देश / क्षेत्र", currencySection: "मुद्रा चुनें", currencyLabel: "मुद्रा प्रतीक चुनें",
-            customCurrency: "या कस्टम प्रतीक टाइप करें", categoriesLimits: "श्रेणियाँ और सीमाएँ", addCat: "श्रेणी जोड़ें", updateCat: "श्रेणी अपडेट करें",
-            auditTitle: "ऑडिट बैलेंस शीट", liabilities: "देयताएं और इक्विटी", assets: "परिसंपत्तियां और प्रवाह", netCapital: "शुद्ध पूंजी / आय", currentCash: "वर्तमान नकद शेष",
-            modalTitle: "बजट सेट करें", modalCategory: "श्रेणी", modalLimit: "मासिक सीमा", saveBudget: "बजट सहेजें", cancel: "रद्द करें"
-        },
-        mr: {
-            dash: "डॅशबोर्ड", tx: "व्यवहार", budgets: "बजेट", categories: "श्रेण्या", audit: "ऑudit",
-            trackerTitle: "सेव्हइटी · बजेट ट्रॅकर", currentBalance: "सध्याची शिल्लक", income: "↓ उत्पन्न", expenses: "↑ खर्च", saved: "📈 बचत",
-            catBreakdown: "श्रेणीनुसार तपशील", manageTx: "व्यवहार व्यवस्थापित करा", optExpense: "खर्च", optIncome: "उत्पन्न",
-            addTx: "व्यवहार जोडा", updateTx: "व्यवहार अद्यतनित करा", setBudgetBtn: "+ बजेट ठरवा", totalBudget: "एकूण बजेट",
-            countrySection: "देश निवडा", countryLabel: "तुमचा देश / प्रदेश", currencySection: "चलन निवडा", currencyLabel: "चलन चिन्ह निवडा",
-            customCurrency: "किंवा कस्टम चिन्ह टाइप करा", categoriesLimits: "श्रेण्या आणि मर्यादा", addCat: "श्रेणी जोडा", updateCat: "श्रेणी अद्यतनित करा",
-            auditTitle: "ऑडिट ताळेबंद", liabilities: "दायित्व आणि भांडवल", assets: "मालमत्ता आणि ओघ", netCapital: "निव्वळ भांडवल / उत्पन्न", currentCash: "सध्याची रोकड शिल्लक",
-            modalTitle: "बजट ठरवा", modalCategory: "श्रेणी", modalLimit: "मासिक मर्यादा", saveBudget: "बजट जतन करा", cancel: "रद्द करा"
-        },
-        gu: {
-            dash: "ડેશબોર્ડ", tx: "વ્યવહારો", budgets: "બજેટ", categories: "શ્રેણીઓ", audit: "ઑડિટ",
-            trackerTitle: "સેવઇટ · બજેટ ટ્રેકર", currentBalance: "વર્તમાન બેલેન્સ", income: "↓ આવક", expenses: "↑ ખર્ચ", saved: "📈 બચત",
-            catBreakdown: "શ્રેણીવાર વિગત", manageTx: "વ્યવહારો સંચાલિત કરો", optExpense: "ખર્ચ", optIncome: "આવક",
-            addTx: "વ્યવહાર ઉમેરો", updateTx: "વ્યવહાર અપડેટ કરો", setBudgetBtn: "+ બજેટ નક્કી કરો", totalBudget: "કુલ બજેટ",
-            countrySection: "દેશ પસંદ કરો", countryLabel: "તમારો દેશ / પ્રદેશ", currencySection: "ચલણ પસંદ કરો", currencyLabel: "ચલણ પ્રતીક પસંદ કરો",
-            customCurrency: "અથવા કસ્ટમ પ્રતીક ટાઇપ કરો", categoriesLimits: "શ્રેણીઓ અને મર્યાદાઓ", addCat: "શ્રેણી ઉમેરો", updateCat: "શ્રેણી અપડેટ કરો",
-            auditTitle: "ઑડિટ બેલેન્સ શીટ", liabilities: "દેવા અને ઇક્વિટી", assets: "મિલકતો અને પ્રવાહ", netCapital: "ચોખ્ખી મૂડી / આવક", currentCash: "વર્તમાન રોકડ બેલેન્સ",
-            modalTitle: "બજેટ નક્કી કરો", modalCategory: "શ્રેણી", modalLimit: "માસિક મર્યાદા", saveBudget: "બજેટ સાચવો", cancel: "રદ કરો"
-        },
-        bn: {
-            dash: "ড্যাশবোর্ড", tx: "লেনদেন", budgets: "বাজেট", categories: "বিভাগ", audit: "অডিট",
-            trackerTitle: "সেভইট · বাজেট ট্র্যাকার", currentBalance: "বর্তমান ব্যালেন্স", income: "↓ আয়", expenses: "↑ খরচ", saved: "📈 সঞ্চয়",
-            catBreakdown: "বিভাগওয়ারী বিবরণ", manageTx: "লেনদেন পরিচালনা করুন", optExpense: "খরচ", optIncome: "আয়",
-            addTx: "লেনদেন যোগ করুন", updateTx: "লেনদেন আপডেট করুন", setBudgetBtn: "+ বাজেট সেট করুন", totalBudget: "মোট বাজেট",
-            countrySection: "দেশ নির্বাচন করুন", countryLabel: "আপনার দেশ / অঞ্চল", currencySection: "মুদ্রা নির্বাচন করুন", currencyLabel: "মুদ্রার প্রতীক চয়ন করুন",
-            customCurrency: "অথবা কাস্টম প্রতীক টাইপ করুন", categoriesLimits: "বিভাগ এবং সীমা", addCat: "বিভাগ যোগ করুন", updateCat: "বিভাগ আপডেট করুন",
-            auditTitle: "অডিট ব্যালেন্স শীট", liabilities: "দায় ও ইকুইটি", assets: "সম্পদ ও প্রবাহ", netCapital: "নিট মূলধন / আয়", currentCash: "বর্তমান নগদ ব্যালেন্স",
-            modalTitle: "বাজেট সেট করুন", modalCategory: "বিভাগ", modalLimit: "মাসিক সীমা", saveBudget: "বাজেট সংরক্ষণ করুন", cancel: "বাতিল"
-        },
-        pa: {
-            dash: "ਡੈਸ਼ਬੋਰਡ", tx: "ਲਣ-ਦੇਣ", budgets: "ਬਜਟ", categories: "ਸ਼੍ਰੇਣੀਆਂ", audit: "ਆਡਿਟ",
-            trackerTitle: "ਸੇਵਇਟ · ਬਜਟ ਟ੍ਰੈਕਰ", currentBalance: "ਮੌਜੂਦਾ ਬਕਾਇਆ", income: "↓ ਆਮਦਨ", expenses: "↑ ਖਰਚੇ", saved: "📈 ਬਚਤ",
-            catBreakdown: "ਸ਼੍ਰੇਣੀ ਵਾਰ ਵੇਰਵਾ", manageTx: "ਲਣ-ਦੇਣ ਪ੍ਰਬੰਧਿਤ ਕਰੋ", optExpense: "ਖਰਚਾ", optIncome: "ਆਮਦਨ",
-            addTx: "ਲਣ-ਦੇਣ ਜੋੜੋ", updateTx: "ਲਣ-ਦੇਣ ਅੱਪਡੇਟ ਕਰੋ", setBudgetBtn: "+ ਬਜਟ ਸੈੱਟ ਕਰੋ", totalBudget: "ਕੁੱਲ ਬਜਟ",
-            countrySection: "ਦੇਸ਼ ਚੁਣੋ", countryLabel: "ਤੁਹਾਡਾ ਦੇਸ਼ / ਖੇਤਰ", currencySection: "ਮੁਦਰਾ ਚੁਣੋ", currencyLabel: "ਮੁਦਰਾ ਦਾ ਪ੍ਰਤੀਕ ਚੁਣੋ",
-            customCurrency: "ਜਾਂ ਕਸਟম ਪ੍ਰਤੀਕ ਟਾਈਪ ਕਰੋ", categoriesLimits: "ਸ਼੍ਰੇਣੀਆਂ ਅਤੇ ਸੀਮਾਵਾਂ", addCat: "ਸ਼੍ਰੇਣੀ ਜੋੜੋ", updateCat: "ਸ਼੍ਰੇਣੀ ਅੱਪਡੇਟ ਕਰੋ",
-            auditTitle: "ਆਡਿਟ ਬੈਲੇਂਸ ਸ਼ੀਟ", liabilities: "ਦੇਣਦਾਰੀਆਂ ਅਤੇ ਇਕੁਇਟੀ", assets: "ਪਰিসंपत्तियां এবং ਵਹਾਅ", netCapital: "ਸ਼ੁੱਧ ਪੂੰਜੀ / ਆਮਦਨ", currentCash: "ਮੌਜੂਦਾ ਨਕਦ ਬਕਾਇਆ",
-            modalTitle: "ਬਜਟ ਸੈੱਟ ਕਰੋ", modalCategory: "ਸ਼੍ਰੇਣੀ", modalLimit: "ਮਾਸਿਕ ਸੀਮਾ", saveBudget: "ਬਜਟ ਸੇਵ ਕਰੋ", cancel: "ਰੱਦ ਕਰੋ"
-        },
-        ta: {
-            dash: "டாஷ்போர்டு", tx: "பரிவர்த்தனைகள்", budgets: " பட்ஜெட்டுகள்", categories: "வகைகள்", audit: "தணிக்கை",
-            trackerTitle: "சேவ்இட் · பட்ஜெட் டிராக்கர்", currentBalance: "நடப்பு இருப்பு", income: "↓ வருமானம்", expenses: "↑ செலவுகள்", saved: "📈 சேமிப்பு",
-            catBreakdown: "வகை வாரியான விபரம்", manageTx: "பரிவர்த்தனைகளை நிர்வகி", optExpense: "செலவு", optIncome: "வருமானம்",
-            addTx: "பரிவர்த்தனை சேர்", updateTx: "பரிவர்த்தனை புதுப்பி", setBudgetBtn: "+ பட்ஜெட் அமை", totalBudget: "மொத்த பட்ஜெட்",
-            countrySection: "நாட்டைத் தேர்ந்தெடு", countryLabel: "உங்கள் நாடு / பிராந்தியம்", currencySection: "நாணயத்தைத் தேர்ந்தெடு", currencyLabel: "நாணயக் குறியீட்டைத் தேர்ந்தெடு",
-            customCurrency: "அல்லது சொந்தக் குறியீட்டைத் தட்டச்சு செய்", categoriesLimits: "வகைகள் & வரம்புகள்", addCat: "வகை சேர்", updateCat: "வகை புதுப்பி",
-            auditTitle: "தணிக்கை இருப்புநிலைக் குறிப்பு", liabilities: "பொறுப்புகள் மற்றும் பங்கு", assets: "சொத்துக்கள் மற்றும் வரவுகள்", netCapital: "நிகர முதலீடு / வருமானம்", currentCash: "நடப்பு ரொக்க இருப்பு",
-            modalTitle: "பட்ஜெட் அமை", modalCategory: "வகை", modalLimit: "மாதாந்திர வரம்பு", saveBudget: "பட்ஜெட் சேமி", cancel: "ரத்து செய்"
-        },
-        te: {
-            dash: "డాష్‌బోర్డ్", tx: "లావాదేవీలు", budgets: "బడ్జెట్‌లు", categories: "వర్గాలు", audit: "ఆడిట్",
-            trackerTitle: "సేవ్‌ఇట్ · బడ్జెట్ ట్రాకర్", currentBalance: "ప్రస్తుత నిల్వ", income: "↓ ఆదాయం", expenses: "↑ ఖర్చులు", saved: "📈 పొదుపు",
-            catBreakdown: "వర్గాల వారీగా వివరాలు", manageTx: "లావాదేవీలను నిర్వహించండి", optExpense: "ఖర్చు", optIncome: "ఆదాయం",
-            addTx: "లావాదేవీని జోడించు", updateTx: "లావాదేవీని అప్‌డేట్ చేయి", setBudgetBtn: "+ బడ్జెట్ సెట్ చేయి", totalBudget: "మొత్తం బడ్జెట్",
-            countrySection: "దేశాన్ని ఎంచుకోండి", countryLabel: "మీ దేశం / ప్రాంతం", currencySection: "కరెన్సీని ఎంచుకోండి", currencyLabel: "కరెన్సీ చిహ్నాన్ని ఎంచుకోండి",
-            customCurrency: "లేదా కస్టమ్ చిహ్నాన్ని టైప్ చేయండి", categoriesLimits: "వర్గాలు & పరిమితులు", addCat: "వర్గాన్ని జోడించు", updateCat: "వర్గాన్ని అప్‌డేట్ చేయి",
-            auditTitle: "ఆడిట్ బ్యాలెన్స్ షీట్", liabilities: "బాధ్యతలు & ఈక్విటీ", assets: "ఆస్తులు & ప్రవాహం", netCapital: "నికర మూలధనం / ఆదాయం", currentCash: "ప్రస్తుత నగదు నిల్వ",
-            modalTitle: "బడ్జెట్ సెట్ చేయి", modalCategory: "వర్గం", modalLimit: "నెలవారీ పరిమితి", saveBudget: "బడ్జెట్ భద్రపరుచు", cancel: "రద్దు చేయి"
-        },
-        ur: {
-            dash: "ڈیش بورڈ", tx: "لین دین", budgets: "بجٹ", categories: "زمرہ جات", audit: "آڈٹ",
-            trackerTitle: "سیو اٹ · بجٹ ٹریکر", currentBalance: "موجودہ بیلنس", income: "↓ آمدنی", expenses: "↑ اخراجات", saved: "📈 بچت",
-            catBreakdown: "زمرہ وار تفصیل", manageTx: "لین دین کا انتظام کریں", optExpense: "خرچ", optIncome: "آمدنی",
-            addTx: "لین دین شامل کریں", updateTx: "لین دین اپ ڈیٹ کریں", setBudgetBtn: "+ بجٹ سیٹ کریں", totalBudget: "کل بجٹ",
-            countrySection: "ملک منتخب کریں", countryLabel: "آپ کا ملک / خطہ", currencySection: "کرنسی منتخب کریں", currencyLabel: "کرنسی کا نشان منتخب کریں",
-            customCurrency: "یا اپنی مرضی کا نشان درج کریں", categoriesLimits: "زمرہ جات اور حدود", addCat: "زمرہ شامل کریں", updateCat: "زمرہ اپ ڈیٹ کریں",
-            auditTitle: "آڈٹ بیلنس شیٹ", liabilities: "واجبات اور سرمائے", assets: "اثاثہ جات", netCapital: "خالص سرمایہ / آمدنی", currentCash: "موجودہ نقد بیلنس",
-            modalTitle: "بجٹ سیٹ کریں", modalCategory: "زمرہ", modalLimit: "ماہانہ حد", saveBudget: "بجٹ محفوظ کریں", cancel: "منسوخ کریں"
-        },
-        ru: {
-            dash: "Панель", tx: "Транзакции", budgets: "Бюджеты", categories: "Категории", audit: "Аудит",
-            trackerTitle: "SAVEIT · ТРЕКЕР БЮДЖЕТА", currentBalance: "Текущий баланс", income: "↓ Доход", expenses: "↑ Расходы", saved: "📈 Сэкономлено",
-            catBreakdown: "Разбивка по категориям", manageTx: "Управление транзакциями", optExpense: "Расход", optIncome: "Доход",
-            addTx: "Добавить транзакцию", updateTx: "Обновить транзакцию", setBudgetBtn: "+ Установить бюджет", totalBudget: "Общий бюджет",
-            countrySection: "Выберите страну", countryLabel: "Ваша страна / регион", currencySection: "Выберите валюту", currencyLabel: "Выберите символ валюты",
-            customCurrency: "Или введите свой символ", categoriesLimits: "Категории и лимиты", addCat: "Добавить категорию", updateCat: "Обновить категорию",
-            auditTitle: "Аудиторский баланс", liabilities: "Обязательства и капитал", assets: "Активы и притоки", netCapital: "Чистый капитал / Доход", currentCash: "Текущий остаток денежных средств",
-            modalTitle: "Установить бюджет", modalCategory: "Категория", modalLimit: "Месячный лимит", saveBudget: "Сохранить бюджет", cancel: "Отмена"
-        },
-        zh: {
-            dash: "仪表盘", tx: "交易", budgets: "预算", categories: "类别", audit: "审计",
-            trackerTitle: "SAVEIT · 预算跟踪器", currentBalance: "当前余额", income: "↓ 收入", expenses: "↑ 支出", saved: "📈 已节省",
-            catBreakdown: "类别明细", manageTx: "管理交易", optExpense: "支出", optIncome: "收入",
-            addTx: "添加交易", updateTx: "更新交易", setBudgetBtn: "+ 设置预算", totalBudget: "总预算",
-            countrySection: "选择国家", countryLabel: "您的国家/地区", currencySection: "选择货币", currencyLabel: "选择货币符号",
-            customCurrency: "或输入自定义符号", categoriesLimits: "类别与限额", addCat: "添加类别", updateCat: "更新类别",
-            auditTitle: "审计资产负债表", liabilities: "负债与权益", assets: "资产与流入", netCapital: "净资本/收入", currentCash: "当前现金余额",
-            modalTitle: "设置预算", modalCategory: "类别", modalLimit: "每月限额", saveBudget: "保存预算", cancel: "取消"
-        },
-        es: {
-            dash: "Panel", tx: "Transacciones", budgets: "Presupuestos", categories: "Categorías", audit: "Auditoría",
-            trackerTitle: "SAVEIT · RASTREADOR DE PRESUPUESTO", currentBalance: "Balance Actual", income: "↓ Ingresos", expenses: "↑ Gastos", saved: "📈 Ahorro",
-            catBreakdown: "Desglose por Categoría", manageTx: "Administrar Transacciones", optExpense: "Gasto", optIncome: "Ingreso",
-            addTx: "Añadir Transacción", updateTx: "Actualizar Transacción", setBudgetBtn: "+ Establecer Presupuesto", totalBudget: "Presupuesto Total",
-            countrySection: "Seleccionar País", countryLabel: "Su País / Región", currencySection: "Seleccionar Moneda", currencyLabel: "Elegir Símbolo de Moneda",
-            customCurrency: "O Escriba un Símbolo Personalizado", categoriesLimits: "Categorías y Límites", addCat: "Añadir Categoría", updateCat: "Actualizar Categoría",
-            auditTitle: "Balance General de Auditoría", liabilities: "Pasivos y Capital", assets: "Activos y Entradas", netCapital: "Capital Neto / Ingresos", currentCash: "Saldo de Efectivo Actual",
-            modalTitle: "Establecer Presupuesto", modalCategory: "Categoría", modalLimit: "Límite Mensual", saveBudget: "Guardar Presupuesto", cancel: "Cancelar"
-        },
-        fr: {
-            dash: "Tableau de bord", tx: "Transactions", budgets: "Budgets", categories: "Catégories", audit: "Audit",
-            trackerTitle: "SAVEIT · SUIVI DE BUDGET", currentBalance: "Solde Actuel", income: "↓ Revenus", expenses: "↑ Dépenses", saved: "📈 Économies",
-            catBreakdown: "Répartition par Catégorie", manageTx: "Gérer les Transactions", optExpense: "Dépense", optIncome: "Revenu",
-            addTx: "Ajouter Transaction", updateTx: "Mettre à jour", setBudgetBtn: "+ Définir Budget", totalBudget: "Budget Total",
-            countrySection: "Sélectionner le Pays", countryLabel: "Votre Pays / Région", currencySection: "Sélectionner la Devise", currencyLabel: "Choisir le Symbole",
-            customCurrency: "Ou tapez un symbole personnalisé", categoriesLimits: "Catégories & Limites", addCat: "Ajouter Catégorie", updateCat: "Mettre à jour",
-            auditTitle: "Bilan d'Audit", liabilities: "Passif et Capitaux", assets: "Actifs et Flux", netCapital: "Capital Net / Revenu", currentCash: "Solde de Caisse Actuel",
-            modalTitle: "Définir le Budget", modalCategory: "Catégorie", modalLimit: "Limite Mensuelle", saveBudget: "Enregistrer", cancel: "Annuler"
-        },
-        de: {
-            dash: "Dashboard", tx: "Transaktionen", budgets: "Budgets", categories: "Kategorien", audit: "Prüfung",
-            trackerTitle: "SAVEIT · BUDGET-TRACKER", currentBalance: "Aktuelles Guthaben", income: "↓ Einnahmen", expenses: "↑ Ausgaben", saved: "📈 Gespart",
-            catBreakdown: "Kategorien-Aufteilung", manageTx: "Transaktionen Verwalten", optExpense: "Ausgabe", optIncome: "Einnahme",
-            addTx: "Transaktion Hinzufügen", updateTx: "Aktualisieren", setBudgetBtn: "+ Budget Festlegen", totalBudget: "Gesamtbudget",
-            countrySection: "Land Auswählen", countryLabel: "Ihr Land / Region", currencySection: "Währung Auswählen", currencyLabel: "Währungssymbol Wählen",
-            customCurrency: "Oder eigenes Symbol eingeben", categoriesLimits: "Kategorien & Limits", addCat: "Kategorie Hinzufügen", updateCat: "Aktualisieren",
-            auditTitle: "Audit-Bilanz", liabilities: "Passiva & Eigenkapital", assets: "Aktiva & Zuflüsse", netCapital: "Nettokapital / Einkommen", currentCash: "Aktueller Kassenbestand",
-            modalTitle: "Budget Festlegen", modalCategory: "Kategorie", modalLimit: "Monatslimit", saveBudget: "Speichern", cancel: "Abbrechen"
-        },
-        ja: {
-            dash: "ダッシュボード", tx: "取引", budgets: "予算", categories: "カテゴリー", audit: "監査",
-            trackerTitle: "SAVEIT · 予算トラッカー", currentBalance: "現在の残高", income: "↓ 収入", expenses: "↑ 支出", saved: "📈 貯蓄",
-            catBreakdown: "カテゴリー別内訳", manageTx: "取引の管理", optExpense: "支出", optIncome: "収入",
-            addTx: "取引を追加", updateTx: "取引を更新", setBudgetBtn: "+ 予算を設定", totalBudget: "総予算",
-            countrySection: "国を選択", countryLabel: "国 / 地域", currencySection: "通貨を選択", currencyLabel: "通貨記号を選択",
-            customCurrency: "またはカスタム記号を入力", categoriesLimits: "カテゴリーと制限", addCat: "カテゴリー追加", updateCat: "カテゴリー更新",
-            auditTitle: "監査貸借対照表", liabilities: "負債と資本", assets: "資産と流入", netCapital: "純資本 / 収入", currentCash: "現在の現金残高",
-            modalTitle: "予算の設定", modalCategory: "カテゴリー", modalLimit: "月間制限", saveBudget: "保存", cancel: "キャンセル"
+            title: "स्मार्ट स्पेंड्स",
+            lblTotalSpent: "कुल खर्च",
+            lblBudgetStatus: "बजट सीमा",
+            lblTxName: "लेनदेन का नाम",
+            lblTxAmount: "राशि",
+            lblTxCategory: "श्रेणी",
+            addTxBtn: "खर्च जोड़ें",
+            lblSetBudget: "मासिक बजट सीमा सेट करें",
+            saveBudgetBtn: "सहेजें",
+            lblHistory: "हाल के लेन-देन"
         },
         ar: {
-            dash: "لوحة القيادة", tx: "المعاملات", budgets: "الميزانيات", categories: "الفئات", audit: "تدقيق",
-            trackerTitle: "SAVEIT · متعقب الميزانية", currentBalance: "الرصيد الحالي", income: "↓ الدخل", expenses: "↑ المصروفات", saved: "📈 المدخرات",
-            catBreakdown: "توزيع الفئات", manageTx: "إدارة المعاملات", optExpense: "مصروف", optIncome: "دخل",
-            addTx: "إضافة معاملة", updateTx: "تحديث المعاملة", setBudgetBtn: "+ تعيين الميزانية", totalBudget: "إجمالي الميزانية",
-            countrySection: "اختر الدولة", countryLabel: "دلتك أو منطقتك", currencySection: "اختر العملة", currencyLabel: "رمز العملة",
-            customCurrency: "أو اكتب رمز مخصص", categoriesLimits: "الفئات والحدود", addCat: "إضافة فئة", updateCat: "تحديث الفئة",
-            auditTitle: "ميزانية التدقيق", liabilities: "الالتزامات وحقوق الملكية", assets: "الأصول والتدفقات", netCapital: "صافي رأس المال / الدخل", currentCash: "رصيد النقد الحالي",
-            modalTitle: "تعيين الميزانية", modalCategory: "الفئة", modalLimit: "الحد الشهري", saveBudget: "حفظ الميزانية", cancel: "إلغاء"
+            title: "المصروف الذكي",
+            lblTotalSpent: "إجمالي المصروفات",
+            lblBudgetStatus: "حد الميزانية",
+            lblTxName: "عنوان المعاملة",
+            lblTxAmount: "المبلغ",
+            lblTxCategory: "الفئة",
+            addTxBtn: "إضافة مصروف",
+            lblSetBudget: "تعيين حد الميزانية الشهرية",
+            saveBudgetBtn: "حفظ",
+            lblHistory: "المعاملات الأخيرة"
         }
     };
 
     function changeLanguage(lang) {
         currentLang = lang;
-        localStorage.setItem('ss_lang', currentLang);
+        localStorage.setItem('smart_spends_lang', lang);
+        applyTranslations();
+    }
+
+    function changeCurrency(curr) {
+        currentCurrency = curr;
+        localStorage.setItem('smart_spends_curr', curr);
         updateUI();
     }
 
     function applyTranslations() {
         let t = translations[currentLang] || translations['en'];
-        document.getElementById('navDash').textContent = t.dash;
-        document.getElementById('navTx').textContent = t.tx;
-        document.getElementById('navBudgets').textContent = t.budgets;
-        document.getElementById('navCategories').textContent = t.categories;
-        document.getElementById('navAudit').textContent = t.audit;
-
-        document.getElementById('lblTrackerTitle').textContent = t.trackerTitle;
-        document.getElementById('lblCurrentBalance').textContent = t.currentBalance;
-        document.getElementById('lblIncome').textContent = t.income;
-        document.getElementById('lblExpenses').textContent = t.expenses;
-        document.getElementById('lblSaved').textContent = t.saved;
-        document.getElementById('lblCatBreakdown').textContent = t.catBreakdown;
-
-        document.getElementById('lblManageTx').textContent = t.manageTx;
-        document.getElementById('optExpense').textContent = t.optExpense;
-        document.getElementById('optIncome').textContent = t.optIncome;
-        if(document.getElementById('editIndex').value === '') {
-            document.getElementById('formSubmitBtn').textContent = t.addTx;
-        } else {
-            document.getElementById('formSubmitBtn').textContent = t.updateTx;
-        }
-
-        document.getElementById('lblBudgetsTitle').textContent = t.budgets;
-        document.getElementById('lblTotalBudget').textContent = t.totalBudget;
-
-        document.getElementById('lblCountrySection').textContent = t.countrySection;
-        document.getElementById('lblCountryLabel').textContent = t.countryLabel;
-        document.getElementById('lblCurrencySection').textContent = t.currencySection;
-        document.getElementById('lblCurrencyLabel').textContent = t.currencyLabel;
-        document.getElementById('lblCustomCurrency').textContent = t.customCurrency;
-        document.getElementById('lblCategoriesLimits').textContent = t.categoriesLimits;
-        
-        if(document.getElementById('editCatIndex').value === '') {
-            document.getElementById('catSubmitBtn').textContent = t.addCat;
-        } else {
-            document.getElementById('catSubmitBtn').textContent = t.updateCat;
-        }
-
-        document.getElementById('lblAuditTitle').textContent = t.auditTitle;
-        document.getElementById('lblLiabilities').textContent = t.liabilities;
-        document.getElementById('lblAssets').textContent = t.assets;
-        document.getElementById('lblNetCapital').textContent = t.netCapital;
-        document.getElementById('lblCurrentCash').textContent = t.currentCash;
-
-        document.getElementById('modalTitle').textContent = t.modalTitle;
-        document.getElementById('modalLblCategory').textContent = t.modalCategory;
-        document.getElementById('modalLblLimit').innerHTML = `${t.modalLimit} (<span class="currSign">${currentCurrency}</span>)`;
-        document.getElementById('modalBtnSave').textContent = t.saveBudget;
-        document.getElementById('modalBtnCancel').textContent = t.cancel;
+        document.getElementById('appTitle').textContent = t.title;
+        document.getElementById('lblTotalSpent').textContent = t.lblTotalSpent;
+        document.getElementById('lblBudgetStatus').textContent = t.lblBudgetStatus;
+        document.getElementById('lblTxName').textContent = t.lblTxName;
+        document.getElementById('lblTxAmount').textContent = t.lblTxAmount;
+        document.getElementById('lblTxCategory').textContent = t.lblTxCategory;
+        document.getElementById('addTxBtn').textContent = t.addTxBtn;
+        document.getElementById('lblSetBudget').textContent = t.lblSetBudget;
+        document.getElementById('saveBudgetBtn').textContent = t.saveBudgetBtn;
+        document.getElementById('lblHistory').textContent = t.lblHistory;
     }
 
-    function switchTab(tabName, btnElement) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        document.getElementById('tab-' + tabName).classList.add('active');
-        btnElement.classList.add('active');
+    function saveBudget() {
+        let val = parseFloat(document.getElementById('budgetInput').value);
+        if (!isNaN(val)) {
+            monthlyBudget = val;
+            localStorage.setItem('smart_spends_budget', monthlyBudget);
+            document.getElementById('budgetInput').value = '';
+            updateUI();
+        }
+    }
+
+    function addTransaction() {
+        let name = document.getElementById('txNameInput').value.trim();
+        let amount = parseFloat(document.getElementById('txAmountInput').value);
+        let category = document.getElementById('txCategoryInput').value;
+
+        if (!name || isNaN(amount) || amount <= 0) {
+            alert(currentLang === 'hi' ? 'कृपया सही विवरण दर्ज करें' : 'Please enter valid transaction details');
+            return;
+        }
+
+        transactions.unshift({ name, amount, category, date: 'Just now' });
+        document.getElementById('txNameInput').value = '';
+        document.getElementById('txAmountInput').value = '';
         updateUI();
-    }
-
-    function onCountryChange(countryCode) {
-        currentCountry = countryCode;
-        localStorage.setItem('ss_country', currentCountry);
-
-        if (countryCurrencyMap[countryCode]) {
-            currentCurrency = countryCurrencyMap[countryCode];
-            document.getElementById('currencySelect').value = currentCurrency;
-            document.getElementById('customCurrencyInput').value = currentCurrency;
-            localStorage.setItem('ss_currency', currentCurrency);
-            updateUI();
-        }
-    }
-
-    function onCurrencySelectChange(val) {
-        if(val) {
-            currentCurrency = val;
-            document.getElementById('customCurrencyInput').value = currentCurrency;
-            localStorage.setItem('ss_currency', currentCurrency);
-            updateUI();
-        }
-    }
-
-    function applyCustomCurrency(val) {
-        let typedVal = val.trim();
-        if(typedVal !== '') {
-            currentCurrency = typedVal;
-            localStorage.setItem('ss_currency', currentCurrency);
-            document.getElementById('currencySelect').value = '';
-            updateUI();
-        }
-    }
-
-    function updateDropdowns() {
-        const select = document.getElementById('txCategory');
-        const modalSelect = document.getElementById('modalCategorySelect');
-        select.innerHTML = '';
-        modalSelect.innerHTML = '';
-
-        categories.forEach(cat => {
-            if (cat === 'Salary') return;
-            const opt1 = document.createElement('option');
-            opt1.value = cat;
-            opt1.textContent = cat;
-            select.appendChild(opt1);
-
-            const opt2 = document.createElement('option');
-            opt2.value = cat;
-            opt2.textContent = cat;
-            modalSelect.appendChild(opt2);
-        });
-        
-        const salaryOpt = document.createElement('option');
-        salaryOpt.value = 'Salary';
-        salaryOpt.textContent = 'Salary';
-        select.appendChild(salaryOpt);
-    }
-
-    function openBudgetModal() {
-        document.querySelectorAll('.currSign').forEach(el => el.textContent = currentCurrency);
-        document.getElementById('budgetModal').style.display = 'flex';
-    }
-
-    function closeBudgetModal() {
-        document.getElementById('budgetModal').style.display = 'none';
-        document.getElementById('modalLimitInput').value = '';
-    }
-
-    function saveModalBudget() {
-        const cat = document.getElementById('modalCategorySelect').value;
-        const limitVal = parseFloat(document.getElementById('modalLimitInput').value);
-        if (!isNaN(limitVal)) {
-            categoryBudgets[cat] = limitVal;
-            closeBudgetModal();
-            updateUI();
-        } else {
-            alert('Please enter a valid amount');
-        }
-    }
-
-    function updateUI() {
-        updateDropdowns();
-        applyTranslations();
-        let income = 0;
-        let expense = 0;
-        let catSpending = {};
-
-        categories.forEach(cat => catSpending[cat] = 0);
-
-        transactions.forEach(t => {
-            let amt = parseFloat(t.amount) || 0;
-            if (t.type === 'income') {
-                income += amt;
-            } else {
-                expense += amt;
-                if (catSpending[t.category] !== undefined) {
-                    catSpending[t.category] += amt;
-                }
-            }
-        });
-
-        let balance = income - expense;
-        let savedPercent = income > 0 ? Math.max(0, Math.round((balance / income) * 100)) : 0;
-
-        document.getElementById('dashBalance').textContent = `${currentCurrency}${balance.toLocaleString()}`;
-        document.getElementById('dashIncome').textContent = `${currentCurrency}${income.toLocaleString()}`;
-        document.getElementById('dashExpense').textContent = `${currentCurrency}${expense.toLocaleString()}`;
-        document.getElementById('dashSaved').textContent = `${savedPercent}%`;
-
-        let breakdownHtml = '';
-        categories.forEach(cat => {
-            if (cat === 'Salary') return;
-            let spent = catSpending[cat] || 0;
-            let limit = categoryBudgets[cat] || 1000;
-            let percent = Math.min(100, Math.round((spent / limit) * 100));
-
-            breakdownHtml += `
-                <div class="progress-card">
-                    <div class="progress-header">
-                        <span>${cat}</span>
-                        <span>${currentCurrency}${spent.toLocaleString()} / ${currentCurrency}${limit.toLocaleString()}</span>
-                    </div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" style="width: ${percent}%;"></div>
-                    </div>
-                    <div class="progress-footer">${percent}% used</div>
-                </div>
-            `;
-        });
-        document.getElementById('categoryBreakdownList').innerHTML = breakdownHtml;
-
-        let totalSpentAll = 0;
-        let totalLimitAll = 0;
-        let budgetsHtml = '';
-
-        categories.forEach(cat => {
-            if (cat === 'Salary') return;
-            let spent = catSpending[cat] || 0;
-            let limit = categoryBudgets[cat] || 1000;
-            totalSpentAll += spent;
-            totalLimitAll += limit;
-            let percent = Math.min(100, Math.round((spent / limit) * 100));
-
-            budgetsHtml += `
-                <div class="progress-card">
-                    <div class="progress-header">
-                        <span>${cat}</span>
-                        <span>${currentCurrency}${spent.toLocaleString()} / ${currentCurrency}${limit.toLocaleString()}</span>
-                    </div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" style="width: ${percent}%;"></div>
-                    </div>
-                    <div class="progress-footer">${percent}% used</div>
-                </div>
-            `;
-        });
-
-        let totalPercentAll = totalLimitAll > 0 ? Math.min(100, Math.round((totalSpentAll / totalLimitAll) * 100)) : 0;
-        document.getElementById('totalBudgetValues').textContent = `${currentCurrency}${totalSpentAll.toLocaleString()} of ${currentCurrency}${totalLimitAll.toLocaleString()}`;
-        document.getElementById('totalbarFill').style.width = `${totalPercentAll}%`;
-        document.getElementById('budgetsListContainer').innerHTML = budgetsHtml;
-
-        let txHtml = '';
-        transactions.forEach((t, index) => {
-            txHtml += `
-                <li class="list-card">
-                    <div>
-                        <strong>${t.title}</strong>
-                        <span>${t.category} | ${t.type.toUpperCase()}</span>
-                    </div>
-                    <div style="display: flex; align-items: center;">
-                        <span style="color: ${t.type === 'income' ? '#34d399' : '#f87171'}; font-weight: bold; margin-right: 8px;">
-                            ${t.type === 'income' ? '+' : '-'}${currentCurrency}${parseFloat(t.amount).toLocaleString()}
-                        </span>
-                        <div class="btn-group">
-                            <button class="edit-btn" onclick="editTransaction(${index})">Edit</button>
-                            <button class="del-btn" onclick="deleteTransaction(${index})">Del</button>
-                        </div>
-                    </div>
-                </li>
-            `;
-        });
-        document.getElementById('txList').innerHTML = txHtml || '<p style="text-align:center; color:#d1d5db;">No transactions added yet.</p>';
-
-        let catListHtml = '';
-        categories.forEach((cat, idx) => {
-            let limitDisplay = cat === 'Salary' ? 'Income Source' : `Limit: ${currentCurrency}${(categoryBudgets[cat] || 1000).toLocaleString()}`;
-            catListHtml += `
-                <li class="list-card">
-                    <div>
-                        <strong>${cat}</strong>
-                        <span>${limitDisplay}</span>
-                    </div>
-                    <div class="btn-group">
-                        <button class="edit-btn" onclick="editCategory(${idx})">Edit</button>
-                        <button class="del-btn" onclick="deleteCategory(${idx})">Del</button>
-                    </div>
-                </li>
-            `;
-        });
-        document.getElementById('categoryList').innerHTML = catListHtml;
-
-        document.getElementById('bsEquity').textContent = `${currentCurrency}${balance.toLocaleString()}`;
-        document.getElementById('bsAsset').textContent = `${currentCurrency}${balance.toLocaleString()}`;
-        document.getElementById('bsTotalLiab').textContent = `${currentCurrency}${balance.toLocaleString()}`;
-        document.getElementById('bsTotalAsset').textContent = `${currentCurrency}${balance.toLocaleString()}`;
-
-        localStorage.setItem('ss_transactions', JSON.stringify(transactions));
-        localStorage.setItem('ss_categories', JSON.stringify(categories));
-        localStorage.setItem('ss_budgets', JSON.stringify(categoryBudgets));
-    }
-
-    const txForm = document.getElementById('txForm');
-    txForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const title = document.getElementById('txTitle').value;
-        const amount = document.getElementById('txAmount').value;
-        const type = document.getElementById('txType').value;
-        const category = document.getElementById('txCategory').value;
-        const editIndex = document.getElementById('editIndex').value;
-
-        let tObj = translations[currentLang] || translations['en'];
-        if (editIndex === '') {
-            transactions.unshift({ title, amount, type, category });
-        } else {
-            transactions[editIndex] = { title, amount, type, category };
-            document.getElementById('editIndex').value = '';
-            document.getElementById('formSubmitBtn').textContent = tObj.addTx;
-        }
-
-        txForm.reset();
-        updateUI();
-    });
-
-    function editTransaction(index) {
-        const t = transactions[index];
-        document.getElementById('txTitle').value = t.title;
-        document.getElementById('txAmount').value = t.amount;
-        document.getElementById('txType').value = t.type;
-        document.getElementById('txCategory').value = t.category;
-        document.getElementById('editIndex').value = index;
-        let tObj = translations[currentLang] || translations['en'];
-        document.getElementById('formSubmitBtn').textContent = tObj.updateTx;
-        switchTab('transactions', document.querySelectorAll('.nav-item')[1]);
     }
 
     function deleteTransaction(index) {
-        if (confirm('Delete this transaction?')) {
-            transactions.splice(index, 1);
-            updateUI();
-        }
+        transactions.splice(index, 1);
+        updateUI();
     }
 
-    const catForm = document.getElementById('catForm');
-    catForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const catName = document.getElementById('catNameInput').value.trim();
-        const catLimit = parseFloat(document.getElementById('catLimitInput').value);
-        const editIdx = document.getElementById('editCatIndex').value;
+    function updateUI() {
+        let totalSpent = transactions.reduce((sum, tx) => sum + tx.amount, 0);
+        document.getElementById('totalSpentVal').textContent = `${currentCurrency}${totalSpent.toFixed(2)}`;
 
-        let tObj = translations[currentLang] || translations['en'];
-        if (catName) {
-            if (editIdx === '') {
-                if (!categories.includes(catName)) {
-                    categories.push(catName);
-                    categoryBudgets[catName] = catLimit || 1000;
-                } else {
-                    alert('Category already exists!');
-                    return;
-                }
+        let limitEl = document.getElementById('budgetLimitVal');
+        if (monthlyBudget > 0) {
+            limitEl.textContent = `${currentCurrency}${monthlyBudget}`;
+            if (totalSpent > monthlyBudget) {
+                limitEl.style.color = 'var(--accent-red)';
             } else {
-                let oldName = categories[editIdx];
-                categories[editIdx] = catName;
-                if (oldName !== catName) {
-                    categoryBudgets[catName] = catLimit || categoryBudgets[oldName] || 1000;
-                    delete categoryBudgets[oldName];
-                    transactions.forEach(t => {
-                        if (t.category === oldName) t.category = catName;
-                    });
-                } else {
-                    categoryBudgets[catName] = catLimit;
-                }
-                document.getElementById('editCatIndex').value = '';
-                document.getElementById('catSubmitBtn').textContent = tObj.addCat;
+                limitEl.style.color = 'var(--accent-green)';
             }
-            catForm.reset();
-            updateUI();
+        } else {
+            limitEl.textContent = currentLang === 'hi' ? 'कोई सीमा नहीं' : 'No Limit';
         }
-    });
 
-    function editCategory(index) {
-        let cat = categories[index];
-        document.getElementById('catNameInput').value = cat;
-        document.getElementById('catLimitInput').value = categoryBudgets[cat] || 1000;
-        document.getElementById('editCatIndex').value = index;
-        let tObj = translations[currentLang] || translations['en'];
-        document.getElementById('catSubmitBtn').textContent = tObj.updateCat;
+        let html = '';
+        transactions.forEach((tx, idx) => {
+            html += `
+                <div class="transaction-item">
+                    <div>
+                        <strong style="font-size: 0.95rem; display:block;">${tx.name}</strong>
+                        <span style="color: #94a3b8; font-size: 0.75rem;">${tx.category} • ${tx.date}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-weight: bold; color: var(--accent-red);">-${currentCurrency}${tx.amount.toFixed(2)}</span>
+                        <button onclick="deleteTransaction(${idx})" style="background: #ef4444; color: #fff; border: none; padding: 2px 6px; border-radius: 4px; cursor: pointer; font-size: 0.7rem;">✕</button>
+                    </div>
+                </div>
+            `;
+        });
+        document.getElementById('transactionListContainer').innerHTML = html || '<p style="text-align:center; color:#94a3b8; font-size:0.85rem;">No transactions recorded.</p>';
+        localStorage.setItem('smart_spends_list', JSON.stringify(transactions));
     }
 
-    function deleteCategory(index) {
-        let cat = categories[index];
-        if (confirm(`Delete category "${cat}"?`)) {
-            categories.splice(index, 1);
-            delete categoryBudgets[cat];
-            updateUI();
-        }
-    }
-
+    applyTranslations();
     updateUI();
 </script>
 
