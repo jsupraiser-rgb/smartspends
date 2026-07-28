@@ -391,7 +391,7 @@
         <div class="box">
             <label style="font-size:0.85rem; font-weight:600; color:#f3f4f6;" id="lblCurrencyLabel">Choose Currency Symbol</label>
             <select id="currencySelect" onchange="onCurrencySelectChange(this.value)">
-                <option value="د.إ">د.إ (AED - UAE Dirham)</option>
+                <option value="AED"> د.إ (AED - UAE Dirham)</option>
                 <option value="₹">₹ (INR - Indian Rupee)</option>
                 <option value="$">$ (USD - US Dollar)</option>
                 <option value="€">€ (EUR - Euro)</option>
@@ -493,12 +493,13 @@
     let categoryBudgets = JSON.parse(localStorage.getItem('ss_budgets')) || { 'Housing': 2500, "Kids' School": 3000, 'Vehicle Repairs': 2000, 'House Repairs': 1000, 'Food': 500, 'Utilities': 3000 };
 
     document.getElementById('countrySelect').value = currentCountry;
-    document.getElementById('currencySelect').value = ['د.إ', '₹', '$', '€', '£', '¥', 'A$', 'C$', '₽'].includes(currentCurrency) ? currentCurrency : '';
+    document.getElementById('currencySelect').value = ['AED', '₹', '$', '€', '£', '¥', 'A$', 'C$', '₽'].includes(currentCurrency) ? currentCurrency : '';
     document.getElementById('customCurrencyInput').value = currentCurrency;
     document.getElementById('langSelect').value = currentLang;
 
+    // Country to default currency mappings
     const countryCurrencyMap = {
-        'AE': 'د.إ',
+        'AE': 'AED',
         'IN': '₹',
         'US': '$',
         'GB': '£',
@@ -614,6 +615,7 @@
         currentCountry = countryCode;
         localStorage.setItem('ss_country', currentCountry);
 
+        // Auto-assign country's default currency if mapped
         if (countryCurrencyMap[countryCode]) {
             currentCurrency = countryCurrencyMap[countryCode];
             document.getElementById('currencySelect').value = currentCurrency;
