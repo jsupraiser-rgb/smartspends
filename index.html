@@ -391,7 +391,7 @@
         <div class="box">
             <label style="font-size:0.85rem; font-weight:600; color:#f3f4f6;" id="lblCurrencyLabel">Choose Currency Symbol</label>
             <select id="currencySelect" onchange="onCurrencySelectChange(this.value)">
-                <option value="AED"> د.إ (AED - UAE Dirham)</option>
+                <option value="د.إ">د.إ (AED - UAE Dirham)</option>
                 <option value="₹">₹ (INR - Indian Rupee)</option>
                 <option value="$">$ (USD - US Dollar)</option>
                 <option value="€">€ (EUR - Euro)</option>
@@ -493,13 +493,12 @@
     let categoryBudgets = JSON.parse(localStorage.getItem('ss_budgets')) || { 'Housing': 2500, "Kids' School": 3000, 'Vehicle Repairs': 2000, 'House Repairs': 1000, 'Food': 500, 'Utilities': 3000 };
 
     document.getElementById('countrySelect').value = currentCountry;
-    document.getElementById('currencySelect').value = ['AED', '₹', '$', '€', '£', '¥', 'A$', 'C$', '₽'].includes(currentCurrency) ? currentCurrency : '';
+    document.getElementById('currencySelect').value = ['د.إ', '₹', '$', '€', '£', '¥', 'A$', 'C$', '₽'].includes(currentCurrency) ? currentCurrency : '';
     document.getElementById('customCurrencyInput').value = currentCurrency;
     document.getElementById('langSelect').value = currentLang;
 
-    // Country to default currency mappings
     const countryCurrencyMap = {
-        'AE': 'AED',
+        'AE': 'د.إ',
         'IN': '₹',
         'US': '$',
         'GB': '£',
@@ -532,6 +531,136 @@
             auditTitle: "ऑडिट बैलेंस शीट", liabilities: "देयताएं और इक्विटी", assets: "परिसंपत्तियां और प्रवाह", netCapital: "शुद्ध पूंजी / आय", currentCash: "वर्तमान नकद शेष",
             modalTitle: "बजट सेट करें", modalCategory: "श्रेणी", modalLimit: "मासिक सीमा", saveBudget: "बजट सहेजें", cancel: "रद्द करें"
         },
+        mr: {
+            dash: "डॅशबोर्ड", tx: "व्यवहार", budgets: "बजेट", categories: "श्रेण्या", audit: "ऑudit",
+            trackerTitle: "सेव्हइटी · बजेट ट्रॅकर", currentBalance: "सध्याची शिल्लक", income: "↓ उत्पन्न", expenses: "↑ खर्च", saved: "📈 बचत",
+            catBreakdown: "श्रेणीनुसार तपशील", manageTx: "व्यवहार व्यवस्थापित करा", optExpense: "खर्च", optIncome: "उत्पन्न",
+            addTx: "व्यवहार जोडा", updateTx: "व्यवहार अद्यतनित करा", setBudgetBtn: "+ बजेट ठरवा", totalBudget: "एकूण बजेट",
+            countrySection: "देश निवडा", countryLabel: "तुमचा देश / प्रदेश", currencySection: "चलन निवडा", currencyLabel: "चलन चिन्ह निवडा",
+            customCurrency: "किंवा कस्टम चिन्ह टाइप करा", categoriesLimits: "श्रेण्या आणि मर्यादा", addCat: "श्रेणी जोडा", updateCat: "श्रेणी अद्यतनित करा",
+            auditTitle: "ऑडिट ताळेबंद", liabilities: "दायित्व आणि भांडवल", assets: "मालमत्ता आणि ओघ", netCapital: "निव्वळ भांडवल / उत्पन्न", currentCash: "सध्याची रोकड शिल्लक",
+            modalTitle: "बजट ठरवा", modalCategory: "श्रेणी", modalLimit: "मासिक मर्यादा", saveBudget: "बजट जतन करा", cancel: "रद्द करा"
+        },
+        gu: {
+            dash: "ડેશબોર્ડ", tx: "વ્યવહારો", budgets: "બજેટ", categories: "શ્રેણીઓ", audit: "ઑડિટ",
+            trackerTitle: "સેવઇટ · બજેટ ટ્રેકર", currentBalance: "વર્તમાન બેલેન્સ", income: "↓ આવક", expenses: "↑ ખર્ચ", saved: "📈 બચત",
+            catBreakdown: "શ્રેણીવાર વિગત", manageTx: "વ્યવહારો સંચાલિત કરો", optExpense: "ખર્ચ", optIncome: "આવક",
+            addTx: "વ્યવહાર ઉમેરો", updateTx: "વ્યવહાર અપડેટ કરો", setBudgetBtn: "+ બજેટ નક્કી કરો", totalBudget: "કુલ બજેટ",
+            countrySection: "દેશ પસંદ કરો", countryLabel: "તમારો દેશ / પ્રદેશ", currencySection: "ચલણ પસંદ કરો", currencyLabel: "ચલણ પ્રતીક પસંદ કરો",
+            customCurrency: "અથવા કસ્ટમ પ્રતીક ટાઇપ કરો", categoriesLimits: "શ્રેણીઓ અને મર્યાદાઓ", addCat: "શ્રેણી ઉમેરો", updateCat: "શ્રેણી અપડેટ કરો",
+            auditTitle: "ઑડિટ બેલેન્સ શીટ", liabilities: "દેવા અને ઇક્વિટી", assets: "મિલકતો અને પ્રવાહ", netCapital: "ચોખ્ખી મૂડી / આવક", currentCash: "વર્તમાન રોકડ બેલેન્સ",
+            modalTitle: "બજેટ નક્કી કરો", modalCategory: "શ્રેણી", modalLimit: "માસિક મર્યાદા", saveBudget: "બજેટ સાચવો", cancel: "રદ કરો"
+        },
+        bn: {
+            dash: "ড্যাশবোর্ড", tx: "লেনদেন", budgets: "বাজেট", categories: "বিভাগ", audit: "অডিট",
+            trackerTitle: "সেভইট · বাজেট ট্র্যাকার", currentBalance: "বর্তমান ব্যালেন্স", income: "↓ আয়", expenses: "↑ খরচ", saved: "📈 সঞ্চয়",
+            catBreakdown: "বিভাগওয়ারী বিবরণ", manageTx: "লেনদেন পরিচালনা করুন", optExpense: "খরচ", optIncome: "আয়",
+            addTx: "লেনদেন যোগ করুন", updateTx: "লেনদেন আপডেট করুন", setBudgetBtn: "+ বাজেট সেট করুন", totalBudget: "মোট বাজেট",
+            countrySection: "দেশ নির্বাচন করুন", countryLabel: "আপনার দেশ / অঞ্চল", currencySection: "মুদ্রা নির্বাচন করুন", currencyLabel: "মুদ্রার প্রতীক চয়ন করুন",
+            customCurrency: "অথবা কাস্টম প্রতীক টাইপ করুন", categoriesLimits: "বিভাগ এবং সীমা", addCat: "বিভাগ যোগ করুন", updateCat: "বিভাগ আপডেট করুন",
+            auditTitle: "অডিট ব্যালেন্স শীট", liabilities: "দায় ও ইকুইটি", assets: "সম্পদ ও প্রবাহ", netCapital: "নিট মূলধন / আয়", currentCash: "বর্তমান নগদ ব্যালেন্স",
+            modalTitle: "বাজেট সেট করুন", modalCategory: "বিভাগ", modalLimit: "মাসিক সীমা", saveBudget: "বাজেট সংরক্ষণ করুন", cancel: "বাতিল"
+        },
+        pa: {
+            dash: "ਡੈਸ਼ਬੋਰਡ", tx: "ਲਣ-ਦੇਣ", budgets: "ਬਜਟ", categories: "ਸ਼੍ਰੇਣੀਆਂ", audit: "ਆਡਿਟ",
+            trackerTitle: "ਸੇਵਇਟ · ਬਜਟ ਟ੍ਰੈਕਰ", currentBalance: "ਮੌਜੂਦਾ ਬਕਾਇਆ", income: "↓ ਆਮਦਨ", expenses: "↑ ਖਰਚੇ", saved: "📈 ਬਚਤ",
+            catBreakdown: "ਸ਼੍ਰੇਣੀ ਵਾਰ ਵੇਰਵਾ", manageTx: "ਲਣ-ਦੇਣ ਪ੍ਰਬੰਧਿਤ ਕਰੋ", optExpense: "ਖਰਚਾ", optIncome: "ਆਮਦਨ",
+            addTx: "ਲਣ-ਦੇਣ ਜੋੜੋ", updateTx: "ਲਣ-ਦੇਣ ਅੱਪਡੇਟ ਕਰੋ", setBudgetBtn: "+ ਬਜਟ ਸੈੱਟ ਕਰੋ", totalBudget: "ਕੁੱਲ ਬਜਟ",
+            countrySection: "ਦੇਸ਼ ਚੁਣੋ", countryLabel: "ਤੁਹਾਡਾ ਦੇਸ਼ / ਖੇਤਰ", currencySection: "ਮੁਦਰਾ ਚੁਣੋ", currencyLabel: "ਮੁਦਰਾ ਦਾ ਪ੍ਰਤੀਕ ਚੁਣੋ",
+            customCurrency: "ਜਾਂ ਕਸਟম ਪ੍ਰਤੀਕ ਟਾਈਪ ਕਰੋ", categoriesLimits: "ਸ਼੍ਰੇਣੀਆਂ ਅਤੇ ਸੀਮਾਵਾਂ", addCat: "ਸ਼੍ਰੇਣੀ ਜੋੜੋ", updateCat: "ਸ਼੍ਰੇਣੀ ਅੱਪਡੇਟ ਕਰੋ",
+            auditTitle: "ਆਡਿਟ ਬੈਲੇਂਸ ਸ਼ੀਟ", liabilities: "ਦੇਣਦਾਰੀਆਂ ਅਤੇ ਇਕੁਇਟੀ", assets: "ਪਰিসंपत्तियां এবং ਵਹਾਅ", netCapital: "ਸ਼ੁੱਧ ਪੂੰਜੀ / ਆਮਦਨ", currentCash: "ਮੌਜੂਦਾ ਨਕਦ ਬਕਾਇਆ",
+            modalTitle: "ਬਜਟ ਸੈੱਟ ਕਰੋ", modalCategory: "ਸ਼੍ਰੇਣੀ", modalLimit: "ਮਾਸਿਕ ਸੀਮਾ", saveBudget: "ਬਜਟ ਸੇਵ ਕਰੋ", cancel: "ਰੱਦ ਕਰੋ"
+        },
+        ta: {
+            dash: "டாஷ்போர்டு", tx: "பரிவர்த்தனைகள்", budgets: " பட்ஜெட்டுகள்", categories: "வகைகள்", audit: "தணிக்கை",
+            trackerTitle: "சேவ்இட் · பட்ஜெட் டிராக்கர்", currentBalance: "நடப்பு இருப்பு", income: "↓ வருமானம்", expenses: "↑ செலவுகள்", saved: "📈 சேமிப்பு",
+            catBreakdown: "வகை வாரியான விபரம்", manageTx: "பரிவர்த்தனைகளை நிர்வகி", optExpense: "செலவு", optIncome: "வருமானம்",
+            addTx: "பரிவர்த்தனை சேர்", updateTx: "பரிவர்த்தனை புதுப்பி", setBudgetBtn: "+ பட்ஜெட் அமை", totalBudget: "மொத்த பட்ஜெட்",
+            countrySection: "நாட்டைத் தேர்ந்தெடு", countryLabel: "உங்கள் நாடு / பிராந்தியம்", currencySection: "நாணயத்தைத் தேர்ந்தெடு", currencyLabel: "நாணயக் குறியீட்டைத் தேர்ந்தெடு",
+            customCurrency: "அல்லது சொந்தக் குறியீட்டைத் தட்டச்சு செய்", categoriesLimits: "வகைகள் & வரம்புகள்", addCat: "வகை சேர்", updateCat: "வகை புதுப்பி",
+            auditTitle: "தணிக்கை இருப்புநிலைக் குறிப்பு", liabilities: "பொறுப்புகள் மற்றும் பங்கு", assets: "சொத்துக்கள் மற்றும் வரவுகள்", netCapital: "நிகர முதலீடு / வருமானம்", currentCash: "நடப்பு ரொக்க இருப்பு",
+            modalTitle: "பட்ஜெட் அமை", modalCategory: "வகை", modalLimit: "மாதாந்திர வரம்பு", saveBudget: "பட்ஜெட் சேமி", cancel: "ரத்து செய்"
+        },
+        te: {
+            dash: "డాష్‌బోర్డ్", tx: "లావాదేవీలు", budgets: "బడ్జెట్‌లు", categories: "వర్గాలు", audit: "ఆడిట్",
+            trackerTitle: "సేవ్‌ఇట్ · బడ్జెట్ ట్రాకర్", currentBalance: "ప్రస్తుత నిల్వ", income: "↓ ఆదాయం", expenses: "↑ ఖర్చులు", saved: "📈 పొదుపు",
+            catBreakdown: "వర్గాల వారీగా వివరాలు", manageTx: "లావాదేవీలను నిర్వహించండి", optExpense: "ఖర్చు", optIncome: "ఆదాయం",
+            addTx: "లావాదేవీని జోడించు", updateTx: "లావాదేవీని అప్‌డేట్ చేయి", setBudgetBtn: "+ బడ్జెట్ సెట్ చేయి", totalBudget: "మొత్తం బడ్జెట్",
+            countrySection: "దేశాన్ని ఎంచుకోండి", countryLabel: "మీ దేశం / ప్రాంతం", currencySection: "కరెన్సీని ఎంచుకోండి", currencyLabel: "కరెన్సీ చిహ్నాన్ని ఎంచుకోండి",
+            customCurrency: "లేదా కస్టమ్ చిహ్నాన్ని టైప్ చేయండి", categoriesLimits: "వర్గాలు & పరిమితులు", addCat: "వర్గాన్ని జోడించు", updateCat: "వర్గాన్ని అప్‌డేట్ చేయి",
+            auditTitle: "ఆడిట్ బ్యాలెన్స్ షీట్", liabilities: "బాధ్యతలు & ఈక్విటీ", assets: "ఆస్తులు & ప్రవాహం", netCapital: "నికర మూలధనం / ఆదాయం", currentCash: "ప్రస్తుత నగదు నిల్వ",
+            modalTitle: "బడ్జెట్ సెట్ చేయి", modalCategory: "వర్గం", modalLimit: "నెలవారీ పరిమితి", saveBudget: "బడ్జెట్ భద్రపరుచు", cancel: "రద్దు చేయి"
+        },
+        ur: {
+            dash: "ڈیش بورڈ", tx: "لین دین", budgets: "بجٹ", categories: "زمرہ جات", audit: "آڈٹ",
+            trackerTitle: "سیو اٹ · بجٹ ٹریکر", currentBalance: "موجودہ بیلنس", income: "↓ آمدنی", expenses: "↑ اخراجات", saved: "📈 بچت",
+            catBreakdown: "زمرہ وار تفصیل", manageTx: "لین دین کا انتظام کریں", optExpense: "خرچ", optIncome: "آمدنی",
+            addTx: "لین دین شامل کریں", updateTx: "لین دین اپ ڈیٹ کریں", setBudgetBtn: "+ بجٹ سیٹ کریں", totalBudget: "کل بجٹ",
+            countrySection: "ملک منتخب کریں", countryLabel: "آپ کا ملک / خطہ", currencySection: "کرنسی منتخب کریں", currencyLabel: "کرنسی کا نشان منتخب کریں",
+            customCurrency: "یا اپنی مرضی کا نشان درج کریں", categoriesLimits: "زمرہ جات اور حدود", addCat: "زمرہ شامل کریں", updateCat: "زمرہ اپ ڈیٹ کریں",
+            auditTitle: "آڈٹ بیلنس شیٹ", liabilities: "واجبات اور سرمائے", assets: "اثاثہ جات", netCapital: "خالص سرمایہ / آمدنی", currentCash: "موجودہ نقد بیلنس",
+            modalTitle: "بجٹ سیٹ کریں", modalCategory: "زمرہ", modalLimit: "ماہانہ حد", saveBudget: "بجٹ محفوظ کریں", cancel: "منسوخ کریں"
+        },
+        ru: {
+            dash: "Панель", tx: "Транзакции", budgets: "Бюджеты", categories: "Категории", audit: "Аудит",
+            trackerTitle: "SAVEIT · ТРЕКЕР БЮДЖЕТА", currentBalance: "Текущий баланс", income: "↓ Доход", expenses: "↑ Расходы", saved: "📈 Сэкономлено",
+            catBreakdown: "Разбивка по категориям", manageTx: "Управление транзакциями", optExpense: "Расход", optIncome: "Доход",
+            addTx: "Добавить транзакцию", updateTx: "Обновить транзакцию", setBudgetBtn: "+ Установить бюджет", totalBudget: "Общий бюджет",
+            countrySection: "Выберите страну", countryLabel: "Ваша страна / регион", currencySection: "Выберите валюту", currencyLabel: "Выберите символ валюты",
+            customCurrency: "Или введите свой символ", categoriesLimits: "Категории и лимиты", addCat: "Добавить категорию", updateCat: "Обновить категорию",
+            auditTitle: "Аудиторский баланс", liabilities: "Обязательства и капитал", assets: "Активы и притоки", netCapital: "Чистый капитал / Доход", currentCash: "Текущий остаток денежных средств",
+            modalTitle: "Установить бюджет", modalCategory: "Категория", modalLimit: "Месячный лимит", saveBudget: "Сохранить бюджет", cancel: "Отмена"
+        },
+        zh: {
+            dash: "仪表盘", tx: "交易", budgets: "预算", categories: "类别", audit: "审计",
+            trackerTitle: "SAVEIT · 预算跟踪器", currentBalance: "当前余额", income: "↓ 收入", expenses: "↑ 支出", saved: "📈 已节省",
+            catBreakdown: "类别明细", manageTx: "管理交易", optExpense: "支出", optIncome: "收入",
+            addTx: "添加交易", updateTx: "更新交易", setBudgetBtn: "+ 设置预算", totalBudget: "总预算",
+            countrySection: "选择国家", countryLabel: "您的国家/地区", currencySection: "选择货币", currencyLabel: "选择货币符号",
+            customCurrency: "或输入自定义符号", categoriesLimits: "类别与限额", addCat: "添加类别", updateCat: "更新类别",
+            auditTitle: "审计资产负债表", liabilities: "负债与权益", assets: "资产与流入", netCapital: "净资本/收入", currentCash: "当前现金余额",
+            modalTitle: "设置预算", modalCategory: "类别", modalLimit: "每月限额", saveBudget: "保存预算", cancel: "取消"
+        },
+        es: {
+            dash: "Panel", tx: "Transacciones", budgets: "Presupuestos", categories: "Categorías", audit: "Auditoría",
+            trackerTitle: "SAVEIT · RASTREADOR DE PRESUPUESTO", currentBalance: "Balance Actual", income: "↓ Ingresos", expenses: "↑ Gastos", saved: "📈 Ahorro",
+            catBreakdown: "Desglose por Categoría", manageTx: "Administrar Transacciones", optExpense: "Gasto", optIncome: "Ingreso",
+            addTx: "Añadir Transacción", updateTx: "Actualizar Transacción", setBudgetBtn: "+ Establecer Presupuesto", totalBudget: "Presupuesto Total",
+            countrySection: "Seleccionar País", countryLabel: "Su País / Región", currencySection: "Seleccionar Moneda", currencyLabel: "Elegir Símbolo de Moneda",
+            customCurrency: "O Escriba un Símbolo Personalizado", categoriesLimits: "Categorías y Límites", addCat: "Añadir Categoría", updateCat: "Actualizar Categoría",
+            auditTitle: "Balance General de Auditoría", liabilities: "Pasivos y Capital", assets: "Activos y Entradas", netCapital: "Capital Neto / Ingresos", currentCash: "Saldo de Efectivo Actual",
+            modalTitle: "Establecer Presupuesto", modalCategory: "Categoría", modalLimit: "Límite Mensual", saveBudget: "Guardar Presupuesto", cancel: "Cancelar"
+        },
+        fr: {
+            dash: "Tableau de bord", tx: "Transactions", budgets: "Budgets", categories: "Catégories", audit: "Audit",
+            trackerTitle: "SAVEIT · SUIVI DE BUDGET", currentBalance: "Solde Actuel", income: "↓ Revenus", expenses: "↑ Dépenses", saved: "📈 Économies",
+            catBreakdown: "Répartition par Catégorie", manageTx: "Gérer les Transactions", optExpense: "Dépense", optIncome: "Revenu",
+            addTx: "Ajouter Transaction", updateTx: "Mettre à jour", setBudgetBtn: "+ Définir Budget", totalBudget: "Budget Total",
+            countrySection: "Sélectionner le Pays", countryLabel: "Votre Pays / Région", currencySection: "Sélectionner la Devise", currencyLabel: "Choisir le Symbole",
+            customCurrency: "Ou tapez un symbole personnalisé", categoriesLimits: "Catégories & Limites", addCat: "Ajouter Catégorie", updateCat: "Mettre à jour",
+            auditTitle: "Bilan d'Audit", liabilities: "Passif et Capitaux", assets: "Actifs et Flux", netCapital: "Capital Net / Revenu", currentCash: "Solde de Caisse Actuel",
+            modalTitle: "Définir le Budget", modalCategory: "Catégorie", modalLimit: "Limite Mensuelle", saveBudget: "Enregistrer", cancel: "Annuler"
+        },
+        de: {
+            dash: "Dashboard", tx: "Transaktionen", budgets: "Budgets", categories: "Kategorien", audit: "Prüfung",
+            trackerTitle: "SAVEIT · BUDGET-TRACKER", currentBalance: "Aktuelles Guthaben", income: "↓ Einnahmen", expenses: "↑ Ausgaben", saved: "📈 Gespart",
+            catBreakdown: "Kategorien-Aufteilung", manageTx: "Transaktionen Verwalten", optExpense: "Ausgabe", optIncome: "Einnahme",
+            addTx: "Transaktion Hinzufügen", updateTx: "Aktualisieren", setBudgetBtn: "+ Budget Festlegen", totalBudget: "Gesamtbudget",
+            countrySection: "Land Auswählen", countryLabel: "Ihr Land / Region", currencySection: "Währung Auswählen", currencyLabel: "Währungssymbol Wählen",
+            customCurrency: "Oder eigenes Symbol eingeben", categoriesLimits: "Kategorien & Limits", addCat: "Kategorie Hinzufügen", updateCat: "Aktualisieren",
+            auditTitle: "Audit-Bilanz", liabilities: "Passiva & Eigenkapital", assets: "Aktiva & Zuflüsse", netCapital: "Nettokapital / Einkommen", currentCash: "Aktueller Kassenbestand",
+            modalTitle: "Budget Festlegen", modalCategory: "Kategorie", modalLimit: "Monatslimit", saveBudget: "Speichern", cancel: "Abbrechen"
+        },
+        ja: {
+            dash: "ダッシュボード", tx: "取引", budgets: "予算", categories: "カテゴリー", audit: "監査",
+            trackerTitle: "SAVEIT · 予算トラッカー", currentBalance: "現在の残高", income: "↓ 収入", expenses: "↑ 支出", saved: "📈 貯蓄",
+            catBreakdown: "カテゴリー別内訳", manageTx: "取引の管理", optExpense: "支出", optIncome: "収入",
+            addTx: "取引を追加", updateTx: "取引を更新", setBudgetBtn: "+ 予算を設定", totalBudget: "総予算",
+            countrySection: "国を選択", countryLabel: "国 / 地域", currencySection: "通貨を選択", currencyLabel: "通貨記号を選択",
+            customCurrency: "またはカスタム記号を入力", categoriesLimits: "カテゴリーと制限", addCat: "カテゴリー追加", updateCat: "カテゴリー更新",
+            auditTitle: "監査貸借対照表", liabilities: "負債と資本", assets: "資産と流入", netCapital: "純資本 / 収入", currentCash: "現在の現金残高",
+            modalTitle: "予算の設定", modalCategory: "カテゴリー", modalLimit: "月間制限", saveBudget: "保存", cancel: "キャンセル"
+        },
         ar: {
             dash: "لوحة القيادة", tx: "المعاملات", budgets: "الميزانيات", categories: "الفئات", audit: "تدقيق",
             trackerTitle: "SAVEIT · متعقب الميزانية", currentBalance: "الرصيد الحالي", income: "↓ الدخل", expenses: "↑ المصروفات", saved: "📈 المدخرات",
@@ -547,7 +676,7 @@
     function changeLanguage(lang) {
         currentLang = lang;
         localStorage.setItem('ss_lang', currentLang);
-        applyTranslations();
+        updateUI();
     }
 
     function applyTranslations() {
@@ -615,7 +744,6 @@
         currentCountry = countryCode;
         localStorage.setItem('ss_country', currentCountry);
 
-        // Auto-assign country's default currency if mapped
         if (countryCurrencyMap[countryCode]) {
             currentCurrency = countryCurrencyMap[countryCode];
             document.getElementById('currencySelect').value = currentCurrency;
