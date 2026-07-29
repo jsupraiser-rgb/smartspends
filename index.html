@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartSpends - Budget & Expense Manager</title>
+    <title>SmartSpends Pro - Complete Budget & Expense Manager</title>
     <style>
         :root {
             --bg-color: #061a14;
@@ -25,8 +25,8 @@
         }
         .container {
             width: 100%;
-            max-width: 400px;
-            padding-bottom: 100px;
+            max-width: 420px;
+            padding-bottom: 110px;
         }
         .top-header {
             display: flex;
@@ -35,11 +35,16 @@
             margin-bottom: 16px;
         }
         h1 {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             margin: 0;
             color: var(--accent-gold);
+            letter-spacing: 0.5px;
         }
-        .lang-select {
+        .controls-group {
+            display: flex;
+            gap: 6px;
+        }
+        .select-box {
             background-color: #04100c;
             color: var(--accent-gold);
             border: 1px solid var(--border-color);
@@ -51,14 +56,14 @@
         .balance-card {
             background: linear-gradient(135deg, #0d2e24, #061a14);
             padding: 20px;
-            border-radius: 16px;
+            border-radius: 18px;
             border: 1px solid var(--border-color);
             text-align: center;
             margin-bottom: 16px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5);
         }
         .balance-amount {
-            font-size: 2.2rem;
+            font-size: 2.4rem;
             font-weight: bold;
             color: var(--accent-gold);
             margin: 8px 0;
@@ -78,11 +83,42 @@
             font-size: 0.75rem;
             color: #94a3b8;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .stat-val {
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: bold;
             margin-top: 4px;
+        }
+        /* Navigation Tabs */
+        .tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+        .tab-btn {
+            padding: 9px 4px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: #94a3b8;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 0.75rem;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+        .tab-btn.active {
+            background-color: var(--accent-gold);
+            color: #061a14;
+            border-color: var(--accent-gold);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
         }
         .box {
             background-color: var(--card-bg);
@@ -101,7 +137,7 @@
         input, select {
             width: 100%;
             padding: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
             background-color: #04100c;
@@ -117,22 +153,22 @@
             cursor: pointer;
             border: none;
             width: 100%;
-            padding: 11px;
+            padding: 12px;
             border-radius: 8px;
             font-size: 0.95rem;
-            box-shadow: 0 2px 10px rgba(251, 191, 36, 0.2);
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.25);
         }
         .transaction-item {
             background-color: var(--card-bg);
             padding: 12px;
-            border-radius: 10px;
+            border-radius: 12px;
             margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border: 1px solid var(--border-color);
         }
-        /* Floating Bottom Toolbar with 5 tools */
+        /* Floating Bottom Toolbar with 5 Tools */
         .floating-toolbar {
             position: fixed;
             bottom: 16px;
@@ -140,14 +176,14 @@
             transform: translateX(-50%);
             width: 92%;
             max-width: 380px;
-            background: rgba(13, 46, 36, 0.95);
+            background: rgba(13, 46, 36, 0.96);
             backdrop-filter: blur(12px);
             border: 1px solid var(--border-color);
             border-radius: 35px;
             display: flex;
             justify-content: space-around;
             padding: 8px 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
             z-index: 1000;
         }
         .tool-btn {
@@ -164,7 +200,7 @@
             padding: 4px;
         }
         .tool-btn span:first-child {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
         }
         .tool-btn.active {
             color: var(--accent-gold);
@@ -175,12 +211,20 @@
 
 <div class="container">
     <div class="top-header">
-        <h1 id="appTitle">SmartSpends</h1>
-        <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
-            <option value="en">English</option>
-            <option value="hi">हिंदी</option>
-            <option value="ar">العربية</option>
-        </select>
+        <h1 id="appTitle">SmartSpends Pro</h1>
+        <div class="controls-group">
+            <select id="currencySelect" class="select-box" onchange="changeCurrency(this.value)">
+                <option value="$">$ USD</option>
+                <option value="₹">₹ INR</option>
+                <option value="€">€ EUR</option>
+                <option value="£">£ GBP</option>
+            </select>
+            <select id="langSelect" class="select-box" onchange="changeLanguage(this.value)">
+                <option value="en">EN</option>
+                <option value="hi">HI</option>
+                <option value="ar">AR</option>
+            </select>
+        </div>
     </div>
 
     <!-- Balance Summary Card -->
@@ -199,47 +243,79 @@
         </div>
     </div>
 
-    <!-- Add Transaction Box -->
-    <div class="box" id="addSection">
-        <label id="lblTxType">Transaction Type</label>
-        <select id="txTypeInput">
-            <option value="income">Income (+)</option>
-            <option value="expense" selected>Expense (-)</option>
-        </select>
-
-        <label id="lblTxName">Description</label>
-        <input type="text" id="txNameInput" placeholder="e.g. Salary, Groceries">
-
-        <label id="lblTxAmount">Amount</label>
-        <input type="number" id="txAmountInput" placeholder="e.g. 150" step="any">
-
-        <button class="action-btn" onclick="addTransaction()" id="addTxBtn">Add Transaction</button>
+    <!-- Navigation Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('dashboard', this)" id="tabDash">Dashboard</button>
+        <button class="tab-btn" onclick="switchTab('add', this)" id="tabAdd">Add Item</button>
+        <button class="tab-btn" onclick="switchTab('budget', this)" id="tabBudget">Budget</button>
     </div>
 
-    <!-- Transaction History List -->
-    <div style="font-size: 0.85rem; font-weight: bold; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase;" id="lblHistory">Transaction History</div>
-    <div id="transactionListContainer"></div>
+    <!-- TAB 1: DASHBOARD & HISTORY -->
+    <div id="section-dashboard" class="tab-content active">
+        <div style="font-size: 0.85rem; font-weight: bold; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase;" id="lblHistory">Transaction History</div>
+        <div id="transactionListContainer"></div>
+    </div>
+
+    <!-- TAB 2: ADD TRANSACTION -->
+    <div id="section-add" class="tab-content">
+        <div class="box">
+            <label id="lblTxType">Transaction Type</label>
+            <select id="txTypeInput">
+                <option value="income">Income (+)</option>
+                <option value="expense" selected>Expense (-)</option>
+            </select>
+
+            <label id="lblTxName">Description</label>
+            <input type="text" id="txNameInput" placeholder="e.g. Salary, Groceries">
+
+            <label id="lblTxAmount">Amount</label>
+            <input type="number" id="txAmountInput" placeholder="e.g. 150" step="any">
+
+            <label id="lblTxCategory">Category</label>
+            <select id="txCategoryInput">
+                <option value="Food">🍔 Food & Dining</option>
+                <option value="Bills">💡 Bills & Utilities</option>
+                <option value="Shopping">🛍️ Shopping</option>
+                <option value="Transport">🚗 Transport</option>
+                <option value="Salary">💰 Salary / Income</option>
+                <option value="Other">📦 Other</option>
+            </select>
+
+            <button class="action-btn" onclick="addTransaction()" id="addTxBtn">Add Transaction</button>
+        </div>
+    </div>
+
+    <!-- TAB 3: BUDGET MANAGER -->
+    <div id="section-budget" class="tab-content">
+        <div class="box">
+            <h3 style="color: var(--accent-gold); margin-top:0;" id="lblBudgetHeading">Monthly Budget Control</h3>
+            <label id="lblSetBudget">Set Limit Amount</label>
+            <input type="number" id="budgetInput" placeholder="e.g. 1000">
+            <button class="action-btn" onclick="saveBudget()" id="saveBudgetBtn">Save Budget Limit</button>
+            <div id="budgetStatusText" style="margin-top: 15px; font-size: 0.9rem; color: #94a3b8; text-align: center;"></div>
+        </div>
+    </div>
 </div>
 
 <!-- Floating Bottom Toolbar with 5 Tools -->
 <div class="floating-toolbar">
-    <button class="tool-btn active" onclick="scrollToTop()" id="toolHome">
+    <button class="tool-btn active" onclick="switchTab('dashboard', document.querySelectorAll('.tab-btn')[0])">
         <span>🏠</span>
         <span id="navHome">Home</span>
     </button>
-    <button class="tool-btn" onclick="focusInput()" id="toolAdd">
+    <button class="tool-btn" onclick="switchTab('add', document.querySelectorAll('.tab-btn')[1])">
         <span>➕</span>
         <span id="navAdd">Add</span>
     </button>
-    <button class="tool-btn" onclick="filterTransactions('all')" id="toolAll">
-        <span>📋</span>
-        <span id="navAll">All</span>
+    <button class="tool-btn" onclick="switchTab('budget', document.querySelectorAll('.tab-btn')[2])">
+        <span>🎯</span>
+        <span id="navBudget">Budget</span>
     </button>
-    <button class="tool-btn" onclick="exportData()" id="toolExport">
+    <button class="tool-btn" onclick="exportData()">
         <span>📊</span>
         <span id="navExport">Export</span>
     </button>
-    <button class="tool-btn" onclick="clearData()" id="toolReset">
+    <button class="tool-btn" onclick="clearData()">
         <span>🗑️</span>
         <span id="navReset">Reset</span>
     </button>
@@ -247,59 +323,84 @@
 
 <script>
     let currentLang = localStorage.getItem('smart_spends_lang') || 'en';
+    let currentCurrency = localStorage.getItem('smart_spends_curr') || '$';
+    let monthlyBudget = parseFloat(localStorage.getItem('smart_spends_budget')) || 0;
+
     document.getElementById('langSelect').value = currentLang;
+    document.getElementById('currencySelect').value = currentCurrency;
 
     let transactions = JSON.parse(localStorage.getItem('smart_spends_data')) || [
-        { name: 'Monthly Salary', amount: 2500, type: 'income' },
-        { name: 'Groceries & Supplies', amount: 85, type: 'expense' }
+        { name: 'Monthly Salary', amount: 2500, type: 'income', category: 'Salary' },
+        { name: 'Groceries & Supplies', amount: 85, type: 'expense', category: 'Food' }
     ];
 
     const translations = {
         en: {
-            title: "SmartSpends",
+            title: "SmartSpends Pro",
             lblTotalBalance: "Total Balance",
             lblIncome: "Income",
             lblExpenses: "Expenses",
+            tabDash: "Dashboard",
+            tabAdd: "Add Item",
+            tabBudget: "Budget",
             lblTxType: "Transaction Type",
             lblTxName: "Description",
             lblTxAmount: "Amount",
+            lblTxCategory: "Category",
             addTxBtn: "Add Transaction",
             lblHistory: "Transaction History",
+            lblBudgetHeading: "Monthly Budget Control",
+            lblSetBudget: "Set Limit Amount",
+            saveBudgetBtn: "Save Budget Limit",
             navHome: "Home",
             navAdd: "Add",
-            navAll: "All",
+            navBudget: "Budget",
             navExport: "Export",
             navReset: "Reset"
         },
         hi: {
-            title: "स्मार्ट स्पेंड्स",
+            title: "स्मार्ट स्पेंड्स प्रो",
             lblTotalBalance: "कुल शेष राशि",
             lblIncome: "आय",
             lblExpenses: "खर्च",
+            tabDash: "डैशबोर्ड",
+            tabAdd: "जोड़ें",
+            tabBudget: "बजट",
             lblTxType: "लेनदेन का प्रकार",
             lblTxName: "विवरण",
             lblTxAmount: "राशि",
+            lblTxCategory: "श्रेणी",
             addTxBtn: "लेनदेन जोड़ें",
             lblHistory: "लेनदेन का इतिहास",
+            lblBudgetHeading: "मासिक बजट नियंत्रण",
+            lblSetBudget: "सीमा राशि निर्धारित करें",
+            saveBudgetBtn: "बजट सहेजें",
             navHome: "होम",
             navAdd: "जोड़ें",
-            navAll: "सभी",
+            navBudget: "बजट",
             navExport: "एक्सपोर्ट",
             navReset: "रीसेट"
         },
         ar: {
-            title: "المصروف الذكي",
+            title: "المصروف الذكي برو",
             lblTotalBalance: "إجمالي الرصيد",
             lblIncome: "الدخل",
             lblExpenses: "المصروفات",
+            tabDash: "لوحة التحكم",
+            tabAdd: "إضافة",
+            tabBudget: "الميزانية",
             lblTxType: "نوع المعاملة",
             lblTxName: "الوصف",
             lblTxAmount: "المبلغ",
+            lblTxCategory: "الفئة",
             addTxBtn: "إضافة معاملة",
             lblHistory: "سجل المعاملات",
+            lblBudgetHeading: "التحكم في الميزانية",
+            lblSetBudget: "تعيين حد المبلغ",
+            saveBudgetBtn: "حفظ الميزانية",
             navHome: "الرئيسية",
             navAdd: "إضافة",
-            navAll: "الكل",
+            navBudget: "الميزانية",
             navExport: "تصدير",
             navReset: "إعادة ضبط"
         }
@@ -311,34 +412,52 @@
         applyTranslations();
     }
 
+    function changeCurrency(curr) {
+        currentCurrency = curr;
+        localStorage.setItem('smart_spends_curr', curr);
+        updateUI();
+    }
+
+    function switchTab(tabName, btnEl) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.getElementById('section-' + tabName).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     function applyTranslations() {
         let t = translations[currentLang] || translations['en'];
         document.getElementById('appTitle').textContent = t.title;
         document.getElementById('lblTotalBalance').textContent = t.lblTotalBalance;
         document.getElementById('lblIncome').textContent = t.lblIncome;
         document.getElementById('lblExpenses').textContent = t.lblExpenses;
+        document.getElementById('tabDash').textContent = t.tabDash;
+        document.getElementById('tabAdd').textContent = t.tabAdd;
+        document.getElementById('tabBudget').textContent = t.tabBudget;
         document.getElementById('lblTxType').textContent = t.lblTxType;
         document.getElementById('lblTxName').textContent = t.lblTxName;
         document.getElementById('lblTxAmount').textContent = t.lblTxAmount;
+        document.getElementById('lblTxCategory').textContent = t.lblTxCategory;
         document.getElementById('addTxBtn').textContent = t.addTxBtn;
         document.getElementById('lblHistory').textContent = t.lblHistory;
+        document.getElementById('lblBudgetHeading').textContent = t.lblBudgetHeading;
+        document.getElementById('lblSetBudget').textContent = t.lblSetBudget;
+        document.getElementById('saveBudgetBtn').textContent = t.saveBudgetBtn;
         document.getElementById('navHome').textContent = t.navHome;
         document.getElementById('navAdd').textContent = t.navAdd;
-        document.getElementById('navAll').textContent = t.navAll;
+        document.getElementById('navBudget').textContent = t.navBudget;
         document.getElementById('navExport').textContent = t.navExport;
         document.getElementById('navReset').textContent = t.navReset;
     }
 
-    function scrollToTop() {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function focusInput() {
-        document.getElementById('txNameInput').focus();
-    }
-
-    function filterTransactions(type) {
-        updateUI();
+    function saveBudget() {
+        let val = parseFloat(document.getElementById('budgetInput').value);
+        if (!isNaN(val)) {
+            monthlyBudget = val;
+            localStorage.setItem('smart_spends_budget', monthlyBudget);
+            document.getElementById('budgetInput').value = '';
+            updateUI();
+            alert(currentLang === 'hi' ? 'बजट सफलतापूर्वक सहेजा गया!' : 'Budget limit saved successfully!');
+        }
     }
 
     function exportData() {
@@ -354,6 +473,8 @@
     function clearData() {
         if (confirm(currentLang === 'hi' ? 'क्या आप सभी डेटा रीसेट करना चाहते हैं?' : 'Are you sure you want to reset all data?')) {
             transactions = [];
+            monthlyBudget = 0;
+            localStorage.removeItem('smart_spends_budget');
             updateUI();
         }
     }
@@ -362,13 +483,18 @@
         let name = document.getElementById('txNameInput').value.trim();
         let amount = parseFloat(document.getElementById('txAmountInput').value);
         let type = document.getElementById('txTypeInput').value;
+        let category = document.getElementById('txCategoryInput').value;
 
-        if (!name || isNaN(amount) || amount <= 0) return;
+        if (!name || isNaN(amount) || amount <= 0) {
+            alert(currentLang === 'hi' ? 'कृपया सही विवरण दर्ज करें' : 'Please enter valid transaction details');
+            return;
+        }
 
-        transactions.unshift({ name, amount, type });
+        transactions.unshift({ name, amount, type, category });
         document.getElementById('txNameInput').value = '';
         document.getElementById('txAmountInput').value = '';
         updateUI();
+        switchTab('dashboard');
     }
 
     function deleteTransaction(index) {
@@ -392,21 +518,34 @@
                 <div class="transaction-item">
                     <div>
                         <strong style="font-size: 0.95rem; display: block;">${tx.name}</strong>
+                        <span style="color: #94a3b8; font-size: 0.75rem;">${tx.category}</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <span style="font-weight: bold; color: ${tx.type === 'income' ? 'var(--accent-green)' : 'var(--accent-red)'};">
-                            ${tx.type === 'income' ? '+' : '-'}$${tx.amount.toFixed(2)}
+                            ${tx.type === 'income' ? '+' : '-'}${currentCurrency}${tx.amount.toFixed(2)}
                         </span>
-                        <button onclick="deleteTransaction(${idx})" style="background: #ef4444; color: #fff; border: none; padding: 2px 6px; border-radius: 4px; cursor: pointer; font-size: 0.7rem;">✕</button>
+                        <button onclick="deleteTransaction(${idx})" style="background: #ef4444; color: #fff; border: none; padding: 3px 7px; border-radius: 4px; cursor: pointer; font-size: 0.7rem;">✕</button>
                     </div>
                 </div>
             `;
         });
 
         let balance = income - expenses;
-        document.getElementById('netBalance').textContent = `$${balance.toFixed(2)}`;
-        document.getElementById('totalIncome').textContent = `+$${income.toFixed(2)}`;
-        document.getElementById('totalExpenses').textContent = `-$${expenses.toFixed(2)}`;
+        document.getElementById('netBalance').textContent = `${currentCurrency}${balance.toFixed(2)}`;
+        document.getElementById('totalIncome').textContent = `+${currentCurrency}${income.toFixed(2)}`;
+        document.getElementById('totalExpenses</h5>').textContent; // Safe query check
+        document.getElementById('totalExpenses').textContent = `-${currentCurrency}${expenses.toFixed(2)}`;
+
+        let budgetText = document.getElementById('budgetStatusText');
+        if (monthlyBudget > 0) {
+            if (expenses > monthlyBudget) {
+                budgetStatusText.innerHTML = `<span style="color: var(--accent-red);">⚠️ Budget exceeded! Limit: ${currentCurrency}${monthlyBudget}</span>`;
+            } else {
+                budgetStatusText.innerHTML = `<span style="color: var(--accent-green);">✓ Within budget limit (${currentCurrency}${monthlyBudget})</span>`;
+            }
+        } else {
+            budgetStatusText.textContent = currentLang === 'hi' ? 'कोई बजट सीमा निर्धारित नहीं है' : 'No monthly budget limit set.';
+        }
 
         document.getElementById('transactionListContainer').innerHTML = html || '<p style="text-align:center; color:#94a3b8; font-size:0.85rem;">No transactions recorded.</p>';
         localStorage.setItem('smart_spends_data', JSON.stringify(transactions));
