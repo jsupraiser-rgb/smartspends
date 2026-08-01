@@ -2,558 +2,1094 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartSpends Pro - Complete Budget & Expense Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1">
+    <meta name="theme-color" content="#095c47">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="Smart budget planning and expense tracker">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <title>SmartSpends</title>
     <style>
         :root {
-            --bg-color: #061a14;
-            --card-bg: #0d2e24;
-            --text-color: #f8fafc;
-            --accent-gold: #fbbf24;
-            --accent-green: #34d399;
-            --accent-red: #ef4444;
-            --border-color: #134e3e;
+            --bg: #095c47;
+            --card: #0d735b;
+            --card-dark: #064032;
+            --text: #ffffff;
+            --muted: #cbd5e1;
+            --gold: #fbbf24;
+            --green: #34d399;
+            --red: #ff6b6b;
+            --border: #149174;
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-top: env(safe-area-inset-top, 0px);
         }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { height: 100%; margin: 0; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 16px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: calc(12px + var(--safe-top)) 14px calc(90px + var(--safe-bottom));
             display: flex;
             justify-content: center;
+            overflow-x: hidden;
         }
-        .container {
-            width: 100%;
-            max-width: 420px;
-            padding-bottom: 110px;
-        }
+        .container { width: 100%; max-width: 420px; }
         .top-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 12px; gap: 8px;
         }
-        h1 {
-            font-size: 1.4rem;
-            margin: 0;
-            color: var(--accent-gold);
-            letter-spacing: 0.5px;
+        h1 { font-size: 1.25rem; margin: 0; color: var(--gold); letter-spacing: 0.3px; }
+        .header-controls { display: flex; gap: 6px; flex-shrink: 0; }
+        .medium-select {
+            background: var(--card-dark); color: var(--gold);
+            border: 1px solid var(--gold); padding: 6px 8px;
+            border-radius: 8px; font-size: 0.75rem; font-weight: 600;
+            outline: none; max-width: 105px;
         }
-        .controls-group {
-            display: flex;
-            gap: 6px;
-        }
-        .select-box {
-            background-color: #04100c;
-            color: var(--accent-gold);
-            border: 1px solid var(--border-color);
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            outline: none;
-        }
-        .balance-card {
-            background: linear-gradient(135deg, #0d2e24, #061a14);
-            padding: 20px;
-            border-radius: 18px;
-            border: 1px solid var(--border-color);
-            text-align: center;
-            margin-bottom: 16px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.5);
-        }
-        .balance-amount {
-            font-size: 2.4rem;
-            font-weight: bold;
-            color: var(--accent-gold);
-            margin: 8px 0;
-        }
-        .stats-row {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            padding-top: 12px;
-            border-top: 1px solid var(--border-color);
-        }
-        .stat-item {
-            text-align: center;
-            flex: 1;
-        }
-        .stat-label {
-            font-size: 0.75rem;
-            color: #94a3b8;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .stat-val {
-            font-size: 1.05rem;
-            font-weight: bold;
-            margin-top: 4px;
-        }
-        /* Navigation Tabs */
-        .tabs {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 6px;
-            margin-bottom: 16px;
-        }
-        .tab-btn {
-            padding: 9px 4px;
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            color: #94a3b8;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 0.75rem;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.2s ease;
-        }
-        .tab-btn.active {
-            background-color: var(--accent-gold);
-            color: #061a14;
-            border-color: var(--accent-gold);
-        }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        .box {
-            background-color: var(--card-bg);
-            padding: 16px;
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 16px;
-        }
-        label {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #cbd5e1;
-            display: block;
-            margin-bottom: 4px;
-        }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 12px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background-color: #04100c;
-            color: var(--text-color);
-            box-sizing: border-box;
-            font-size: 0.95rem;
-            outline: none;
-        }
-        .action-btn {
-            background: linear-gradient(135deg, #fbbf24, #d97706);
-            color: #061a14;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.25);
-        }
-        .transaction-item {
-            background-color: var(--card-bg);
-            padding: 12px;
-            border-radius: 12px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid var(--border-color);
-        }
-        /* Floating Bottom Toolbar with 5 Tools */
-        .floating-toolbar {
-            position: fixed;
-            bottom: 16px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 92%;
-            max-width: 380px;
-            background: rgba(13, 46, 36, 0.96);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-color);
-            border-radius: 35px;
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+        /* Nav */
+        .nav-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: var(--card-dark);
+            border-top: 1px solid var(--border);
+            display: flex; justify-content: space-around;
+            padding: 6px 0 calc(6px + var(--safe-bottom));
             z-index: 1000;
         }
-        .tool-btn {
-            background: none;
-            border: none;
-            color: #94a3b8;
-            font-size: 0.7rem;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-            padding: 4px;
+        .nav-item {
+            background: none; border: none; color: var(--muted);
+            font-size: 0.68rem; cursor: pointer; text-align: center;
+            flex: 1; display: flex; flex-direction: column; align-items: center;
+            gap: 2px; padding: 6px 2px; border-radius: 10px;
         }
-        .tool-btn span:first-child {
-            font-size: 1.15rem;
+        .nav-icon { font-size: 1.25rem; line-height: 1; }
+        .nav-item.active { color: var(--gold); font-weight: 700; }
+        .tab-content { display: none; animation: fadeIn 0.2s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+        /* Cards */
+        .hero-card {
+            background: linear-gradient(145deg, #0d735b, #0a5c4a);
+            padding: 18px; border-radius: 18px; margin-bottom: 14px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.28); border: 1px solid var(--border);
         }
-        .tool-btn.active {
-            color: var(--accent-gold);
+        .hero-title { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.2px; color: var(--gold); margin-bottom: 4px; }
+        .hero-balance { font-size: 2.1rem; font-weight: 800; color: var(--gold); margin: 4px 0 12px; word-break: break-all; }
+        .hero-grid {
+            display: grid; grid-template-columns: 1fr 1fr 1fr;
+            font-size: 0.82rem; border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 10px; gap: 4px;
         }
+        .hero-grid span { display: block; font-size: 0.72rem; color: var(--muted); margin-bottom: 2px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .section-title { font-size: 1.1rem; font-weight: 700; color: var(--gold); }
+        .box {
+            background: var(--card); padding: 14px; border-radius: 14px;
+            border: 1px solid var(--border); margin-bottom: 12px;
+        }
+        .progress-card {
+            background: var(--card); padding: 12px 14px; border-radius: 12px;
+            border: 1px solid var(--border); margin-bottom: 8px;
+        }
+        .progress-header { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 6px; font-weight: 600; gap: 8px; }
+        .progress-bar-bg { background: var(--card-dark); border-radius: 6px; height: 8px; overflow: hidden; margin-bottom: 4px; }
+        .progress-bar-fill { background: var(--gold); height: 100%; border-radius: 6px; transition: width 0.35s ease; }
+        .progress-bar-fill.over { background: var(--red); }
+        .progress-footer { font-size: 0.78rem; color: var(--muted); }
+
+        /* Forms */
+        label { font-size: 0.82rem; font-weight: 600; color: #e2e8f0; display: block; margin-bottom: 4px; }
+        input, select, button, textarea {
+            width: 100%; padding: 12px; margin-bottom: 10px;
+            border-radius: 10px; border: 1px solid var(--border);
+            background: var(--card-dark); color: #fff;
+            font-size: 1rem; font-weight: 500; outline: none;
+            -webkit-appearance: none;
+        }
+        input::placeholder { color: #94a3b8; }
+        input:focus, select:focus { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(251,191,36,0.25); }
+        select option { background: var(--card-dark); }
+        button.action-btn {
+            background: linear-gradient(135deg, #fbbf24, #d97706);
+            color: #064e3b; font-weight: 700; border: none; cursor: pointer;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.25); margin-bottom: 0;
+        }
+        button.action-btn:active { transform: scale(0.98); }
+        .btn-secondary {
+            background: var(--card-dark); color: #fff; border: 1px solid var(--border);
+            font-weight: 600; cursor: pointer; padding: 12px; border-radius: 10px;
+        }
+        .btn-red-round {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #fff; border: none; width: 36px; height: 36px; border-radius: 50%;
+            font-weight: bold; font-size: 1.2rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 3px 10px rgba(239,68,68,0.4);
+        }
+
+        /* Transaction cards */
+        .list-card {
+            background: var(--card); padding: 12px 14px; border-radius: 12px;
+            margin-bottom: 8px; display: flex; justify-content: space-between;
+            align-items: center; border: 1px solid var(--border); gap: 8px;
+        }
+        .list-card-info { flex: 1; min-width: 0; }
+        .list-card-info strong { display: block; font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .list-card-info span { display: block; font-size: 0.75rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .list-card-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+        .list-card-amount { font-size: 0.92rem; font-weight: 700; text-align: right; }
+        .btn-group { display: flex; flex-direction: column; gap: 4px; }
+        .btn-group button {
+            width: 46px; height: 24px; padding: 0; margin: 0; font-size: 0.68rem;
+            font-weight: 700; border-radius: 5px; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .edit-btn { background: var(--gold); color: #064e3b; }
+        .del-btn { background: #ef4444; color: #fff; }
+
+        /* Filters row */
+        .filters-row {
+            display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;
+        }
+        .filters-row input, .filters-row select {
+            flex: 1; min-width: 100px; margin-bottom: 0; padding: 10px; font-size: 0.9rem;
+        }
+        .search-wrap { position: relative; flex: 2; min-width: 140px; }
+        .search-wrap input { padding-left: 36px; margin-bottom: 0; }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.6; pointer-events: none; }
+
+        /* Modal */
+        .modal {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.8); justify-content: center; align-items: center;
+            z-index: 2000; padding: 16px;
+        }
+        .modal.show { display: flex; }
+        .modal-content {
+            background: var(--card); padding: 20px; border-radius: 18px;
+            width: 100%; max-width: 360px; border: 1px solid var(--border);
+            max-height: 90vh; overflow-y: auto;
+        }
+
+        /* Tables */
+        .tally-table {
+            width: 100%; border-collapse: collapse; background: var(--card);
+            border-radius: 10px; overflow: hidden; border: 1px solid var(--border);
+            font-size: 0.82rem; margin-bottom: 14px;
+        }
+        .tally-table th, .tally-table td { padding: 9px 8px; border: 1px solid var(--border); text-align: left; }
+        .tally-table th { background: var(--card-dark); color: var(--gold); }
+
+        /* Charts */
+        .chart-row { display: flex; gap: 8px; margin-bottom: 14px; }
+        .chart-box {
+            flex: 1; background: var(--card); border-radius: 14px; padding: 12px;
+            border: 1px solid var(--border); text-align: center;
+        }
+        .mini-bars { display: flex; align-items: flex-end; justify-content: space-around; height: 70px; gap: 4px; margin-top: 8px; }
+        .mini-bar {
+            flex: 1; background: var(--gold); border-radius: 4px 4px 0 0;
+            min-height: 4px; transition: height 0.4s ease;
+        }
+        .mini-bar.expense { background: var(--red); }
+        .mini-bar.income { background: var(--green); }
+        .chart-label { font-size: 0.7rem; color: var(--muted); margin-top: 4px; }
+
+        /* PIN Lock */
+        #pinOverlay {
+            position: fixed; inset: 0; background: var(--bg); z-index: 9999;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            padding: 24px;
+        }
+        #pinOverlay.show { display: flex; }
+        .pin-dots { display: flex; gap: 14px; margin: 20px 0 28px; }
+        .pin-dot {
+            width: 14px; height: 14px; border-radius: 50%;
+            border: 2px solid var(--gold); background: transparent;
+        }
+        .pin-dot.filled { background: var(--gold); }
+        .pin-pad {
+            display: grid; grid-template-columns: repeat(3, 72px); gap: 12px;
+        }
+        .pin-key {
+            width: 72px; height: 72px; border-radius: 50%;
+            background: var(--card); border: 1px solid var(--border);
+            color: #fff; font-size: 1.5rem; font-weight: 600; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .pin-key:active { background: var(--card-dark); }
+
+        /* Badge */
+        .badge {
+            display: inline-block; font-size: 0.65rem; padding: 2px 6px;
+            border-radius: 6px; background: rgba(251,191,36,0.2); color: var(--gold);
+            margin-left: 4px; vertical-align: middle;
+        }
+        .empty-state { text-align: center; padding: 28px 12px; color: var(--muted); font-size: 0.9rem; }
+        .checkbox-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+        .checkbox-row input { width: auto; margin: 0; }
+        .checkbox-row label { margin: 0; font-weight: 500; }
+
+        /* Toast */
+        #toast {
+            position: fixed; bottom: calc(90px + var(--safe-bottom)); left: 50%;
+            transform: translateX(-50%) translateY(20px); background: #111;
+            color: #fff; padding: 10px 18px; border-radius: 10px; font-size: 0.88rem;
+            opacity: 0; transition: all 0.3s ease; z-index: 3000; pointer-events: none;
+            max-width: 90%; text-align: center;
+        }
+        #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     </style>
 </head>
 <body>
 
+<!-- PIN Lock Overlay -->
+<div id="pinOverlay">
+    <h2 style="color:var(--gold); margin:0;">SmartSpends</h2>
+    <p style="color:var(--muted); margin:8px 0 0;" id="pinPrompt">Enter PIN</p>
+    <div class="pin-dots" id="pinDots">
+        <div class="pin-dot"></div><div class="pin-dot"></div>
+        <div class="pin-dot"></div><div class="pin-dot"></div>
+    </div>
+    <div class="pin-pad" id="pinPad"></div>
+</div>
+
 <div class="container">
     <div class="top-header">
-        <h1 id="appTitle">SmartSpends Pro</h1>
-        <div class="controls-group">
-            <select id="currencySelect" class="select-box" onchange="changeCurrency(this.value)">
-                <option value="$">$ USD</option>
-                <option value="₹">₹ INR</option>
-                <option value="€">€ EUR</option>
-                <option value="£">£ GBP</option>
+        <h1>SmartSpends</h1>
+        <div class="header-controls">
+            <select id="langSelect" class="medium-select" onchange="changeLanguage(this.value)">
+                <option value="en">English</option>
+                <option value="hi">हिन्दी</option>
+                <option value="mr">मराठी</option>
+                <option value="gu">ગુજરાતી</option>
+                <option value="bn">বাংলা</option>
+                <option value="pa">ਪੰਜਾਬੀ</option>
+                <option value="ta">தமிழ்</option>
+                <option value="te">తెలుగు</option>
+                <option value="ur">اردو</option>
+                <option value="ru">Русский</option>
+                <option value="zh">中文</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+                <option value="de">Deutsch</option>
+                <option value="ja">日本語</option>
+                <option value="ar">العربية</option>
             </select>
-            <select id="langSelect" class="select-box" onchange="changeLanguage(this.value)">
-                <option value="en">EN</option>
-                <option value="hi">HI</option>
-                <option value="ar">AR</option>
+            <select id="headerCurrencySelect" class="medium-select" onchange="headerCurrencyChange(this.value)">
+                <option value="€">EUR (€)</option>
+                <option value="د.إ">AED</option>
+                <option value="ر.س">SAR</option>
+                <option value="ر.ق">QAR</option>
+                <option value="د.ك">KWD</option>
+                <option value="ر.ع.">OMR</option>
+                <option value="د.ب">BHD</option>
+                <option value="₹">INR (₹)</option>
+                <option value="$">USD ($)</option>
+                <option value="£">GBP (£)</option>
+                <option value="¥">JPY (¥)</option>
             </select>
         </div>
     </div>
 
-    <!-- Balance Summary Card -->
-    <div class="balance-card">
-        <div style="font-size: 0.8rem; color: #94a3b8; text-transform: uppercase;" id="lblTotalBalance">Total Balance</div>
-        <div class="balance-amount" id="netBalance">$0.00</div>
-        <div class="stats-row">
-            <div class="stat-item" style="border-right: 1px solid var(--border-color);">
-                <div class="stat-label" id="lblIncome">Income</div>
-                <div class="stat-val" id="totalIncome" style="color: var(--accent-green);">+$0.00</div>
+    <!-- DASHBOARD -->
+    <div id="tab-dashboard" class="tab-content active">
+        <div class="hero-card">
+            <div class="hero-title" id="lblTrackerTitle">SMARTSPENDS · BUDGET TRACKER</div>
+            <div style="font-size:0.82rem; font-weight:600; margin-bottom:2px;" id="lblCurrentBalance">Current Balance</div>
+            <div class="hero-balance" id="dashBalance">0</div>
+            <div class="hero-grid">
+                <div><span id="lblIncome">↓ Income</span><strong id="dashIncome" style="color:var(--green);">0</strong></div>
+                <div><span id="lblExpenses">↑ Expenses</span><strong id="dashExpense" style="color:var(--red);">0</strong></div>
+                <div><span id="lblSaved">📈 Saved</span><strong id="dashSaved">0%</strong></div>
             </div>
-            <div class="stat-item">
-                <div class="stat-label" id="lblExpenses">Expenses</div>
-                <div class="stat-val" id="totalExpenses" style="color: var(--accent-red);">-$0.00</div>
+        </div>
+
+        <div class="filters-row">
+            <select id="filterYear" onchange="updateUI(false)"></select>
+            <select id="filterMonth" onchange="updateUI(false)"></select>
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-box">
+                <div style="font-size:0.78rem; color:var(--gold); font-weight:600;">Last 6 Months</div>
+                <div class="mini-bars" id="trendBars"></div>
+                <div class="chart-label" id="trendLabel">Net trend</div>
             </div>
         </div>
+
+        <div class="section-header">
+            <div class="section-title" id="lblCatBreakdown">Category Breakdown</div>
+        </div>
+        <div id="categoryBreakdownList"></div>
     </div>
 
-    <!-- Navigation Tabs -->
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('dashboard', this)" id="tabDash">Dashboard</button>
-        <button class="tab-btn" onclick="switchTab('add', this)" id="tabAdd">Add Item</button>
-        <button class="tab-btn" onclick="switchTab('budget', this)" id="tabBudget">Budget</button>
-    </div>
+    <!-- TRANSACTIONS -->
+    <div id="tab-transactions" class="tab-content">
+        <div class="section-title" style="margin-bottom:10px;" id="lblManageTx">Manage Transactions</div>
 
-    <!-- TAB 1: DASHBOARD & HISTORY -->
-    <div id="section-dashboard" class="tab-content active">
-        <div style="font-size: 0.85rem; font-weight: bold; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase;" id="lblHistory">Transaction History</div>
-        <div id="transactionListContainer"></div>
-    </div>
+        <div class="filters-row">
+            <div class="search-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="search" id="txSearch" placeholder="Search..." oninput="updateUI(false)">
+            </div>
+            <select id="txTypeFilter" onchange="updateUI(false)">
+                <option value="all">All</option>
+                <option value="expense">Expense</option>
+                <option value="income">Income</option>
+            </select>
+        </div>
 
-    <!-- TAB 2: ADD TRANSACTION -->
-    <div id="section-add" class="tab-content">
-        <div class="box">
-            <label id="lblTxType">Transaction Type</label>
-            <select id="txTypeInput">
-                <option value="income">Income (+)</option>
-                <option value="expense" selected>Expense (-)</option>
+        <form id="txForm" class="box">
+            <input type="hidden" id="editIndex" value="">
+            <label id="lblDesc">Description</label>
+            <input type="text" id="txTitle" placeholder="e.g. Groceries" autocomplete="off" required>
+
+            <label id="lblAmount">Amount</label>
+            <input type="number" id="txAmount" placeholder="0.00" step="any" inputmode="decimal" required>
+
+            <label id="lblType">Type</label>
+            <select id="txType">
+                <option value="expense" id="optExpense">Expense</option>
+                <option value="income" id="optIncome">Income</option>
             </select>
 
-            <label id="lblTxName">Description</label>
-            <input type="text" id="txNameInput" placeholder="e.g. Salary, Groceries">
+            <label id="lblCategory">Category</label>
+            <select id="txCategory"></select>
 
-            <label id="lblTxAmount">Amount</label>
-            <input type="number" id="txAmountInput" placeholder="e.g. 150" step="any">
+            <label id="lblDate">Date</label>
+            <input type="date" id="txDate" required>
 
-            <label id="lblTxCategory">Category</label>
-            <select id="txCategoryInput">
-                <option value="Food">🍔 Food & Dining</option>
-                <option value="Bills">💡 Bills & Utilities</option>
-                <option value="Shopping">🛍️ Shopping</option>
-                <option value="Transport">🚗 Transport</option>
-                <option value="Salary">💰 Salary / Income</option>
-                <option value="Other">📦 Other</option>
-            </select>
+            <div class="checkbox-row">
+                <input type="checkbox" id="txRecurring">
+                <label for="txRecurring" id="lblRecurring">Recurring monthly</label>
+            </div>
 
-            <button class="action-btn" onclick="addTransaction()" id="addTxBtn">Add Transaction</button>
-        </div>
+            <button type="submit" class="action-btn" id="formSubmitBtn">Add Transaction</button>
+        </form>
+        <ul id="txList" style="list-style:none; padding:0; margin:0;"></ul>
     </div>
 
-    <!-- TAB 3: BUDGET MANAGER -->
-    <div id="section-budget" class="tab-content">
-        <div class="box">
-            <h3 style="color: var(--accent-gold); margin-top:0;" id="lblBudgetHeading">Monthly Budget Control</h3>
-            <label id="lblSetBudget">Set Limit Amount</label>
-            <input type="number" id="budgetInput" placeholder="e.g. 1000">
-            <button class="action-btn" onclick="saveBudget()" id="saveBudgetBtn">Save Budget Limit</button>
-            <div id="budgetStatusText" style="margin-top: 15px; font-size: 0.9rem; color: #94a3b8; text-align: center;"></div>
+    <!-- BUDGETS -->
+    <div id="tab-budgets" class="tab-content">
+        <div class="section-header">
+            <div class="section-title" id="lblBudgetsTitle">Budgets</div>
+            <button class="btn-red-round" onclick="openBudgetModal()" title="Set Budget">+</button>
         </div>
+        <div class="progress-card" id="totalBudgetCard">
+            <div class="progress-header">
+                <span id="lblTotalBudget">Total Budget</span>
+                <span id="totalBudgetValues">0 of 0</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="totalbarFill" style="width:0%;"></div>
+            </div>
+        </div>
+        <div id="budgetsListContainer"></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="tab-categories" class="tab-content">
+        <div class="section-title" style="margin-bottom:10px;" id="lblCountrySection">Country & Currency</div>
+        <div class="box">
+            <label id="lblCountryLabel">Country / Region</label>
+            <select id="countrySelect" onchange="onCountryChange(this.value)">
+                <option value="DE">Germany (EUR)</option>
+                <option value="AE">UAE (AED)</option>
+                <option value="SA">Saudi Arabia (SAR)</option>
+                <option value="QA">Qatar (QAR)</option>
+                <option value="KW">Kuwait (KWD)</option>
+                <option value="OM">Oman (OMR)</option>
+                <option value="BH">Bahrain (BHD)</option>
+                <option value="IN">India (INR)</option>
+                <option value="US">United States (USD)</option>
+                <option value="GB">United Kingdom (GBP)</option>
+                <option value="EU">European Union (EUR)</option>
+                <option value="JP">Japan (JPY)</option>
+                <option value="CN">China (CNY)</option>
+                <option value="AU">Australia (AUD)</option>
+                <option value="CA">Canada (CAD)</option>
+                <option value="RU">Russia (RUB)</option>
+                <option value="OTHER">Other / Custom</option>
+            </select>
+            <label style="margin-top:8px;" id="lblCustomCurrency">Custom Symbol</label>
+            <input type="text" id="customCurrencyInput" placeholder="e.g. Kč, ₦, kr" oninput="applyCustomCurrency(this.value)">
+        </div>
+
+        <div class="section-title" style="margin-bottom:10px;" id="lblSecurity">Security</div>
+        <div class="box">
+            <label id="lblPin">App PIN (4 digits)</label>
+            <input type="password" id="pinInput" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="Leave empty to disable">
+            <button class="btn-secondary" onclick="savePin()" id="btnSavePin">Save PIN</button>
+            <button class="btn-secondary" style="margin-top:8px;" onclick="clearPin()" id="btnClearPin">Remove PIN</button>
+        </div>
+
+        <div class="section-title" style="margin-bottom:10px;" id="lblBackupSection">Backup & Export</div>
+        <div class="box" style="display:flex; flex-direction:column; gap:8px;">
+            <button class="action-btn" onclick="exportDataJson()">📥 Export JSON</button>
+            <button class="btn-secondary" onclick="exportDataCsv()">📄 Export CSV</button>
+            <button class="btn-secondary" onclick="document.getElementById('importFile').click()">📤 Import JSON</button>
+            <input type="file" id="importFile" style="display:none" accept=".json" onchange="importDataJson(event)">
+        </div>
+
+        <div class="section-title" style="margin-bottom:10px;" id="lblCategoriesLimits">Categories & Limits</div>
+        <form id="catForm" class="box">
+            <input type="hidden" id="editCatIndex" value="">
+            <label>Category Name</label>
+            <input type="text" id="catNameInput" placeholder="e.g. Dining" required>
+            <label>Monthly Limit</label>
+            <input type="number" id="catLimitInput" placeholder="0.00" step="any" inputmode="decimal" required>
+            <button type="submit" class="action-btn" id="catSubmitBtn">Add Category</button>
+        </form>
+        <ul id="categoryList" style="list-style:none; padding:0; margin:0;"></ul>
+    </div>
+
+    <!-- AUDIT -->
+    <div id="tab-audit" class="tab-content">
+        <div class="section-title" style="margin-bottom:12px;" id="lblAuditTitle">Audit (Past 3 Years)</div>
+        <div style="font-size:0.9rem; font-weight:700; color:var(--gold); margin-bottom:6px;">Yearly Summary</div>
+        <table class="tally-table" id="yearlyTable">
+            <thead><tr><th>Year</th><th>Income</th><th>Expense</th><th>Net</th></tr></thead>
+            <tbody></tbody>
+        </table>
+        <div style="font-size:0.9rem; font-weight:700; color:var(--gold); margin-bottom:6px;">Month-wise Details</div>
+        <table class="tally-table" id="monthlyTable">
+            <thead><tr><th>Month</th><th>Income</th><th>Expense</th><th>Net</th></tr></thead>
+            <tbody></tbody>
+        </table>
     </div>
 </div>
 
-<!-- Floating Bottom Toolbar with 5 Tools -->
-<div class="floating-toolbar">
-    <button class="tool-btn active" onclick="switchTab('dashboard', document.querySelectorAll('.tab-btn')[0])">
-        <span>🏠</span>
-        <span id="navHome">Home</span>
+<!-- Budget Modal -->
+<div id="budgetModal" class="modal">
+    <div class="modal-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h3 style="margin:0; color:var(--gold);" id="modalTitle">Set Budget</h3>
+            <span onclick="closeBudgetModal()" style="font-size:1.5rem; cursor:pointer;">&times;</span>
+        </div>
+        <label id="modalLblCategory">Category</label>
+        <select id="modalCategorySelect" style="margin-bottom:10px;"></select>
+        <label id="modalLblLimit">Monthly Limit (<span class="currSign"></span>)</label>
+        <input type="number" id="modalLimitInput" placeholder="0.00" inputmode="decimal" style="margin-bottom:14px;" required>
+        <button class="action-btn" onclick="saveModalBudget()" id="modalBtnSave">Save</button>
+    </div>
+</div>
+
+<!-- Bottom Nav -->
+<div class="nav-bar">
+    <button class="nav-item active" onclick="switchTab('dashboard', event)">
+        <span class="nav-icon">🏠</span><span id="navDash">Dashboard</span>
     </button>
-    <button class="tool-btn" onclick="switchTab('add', document.querySelectorAll('.tab-btn')[1])">
-        <span>➕</span>
-        <span id="navAdd">Add</span>
+    <button class="nav-item" onclick="switchTab('transactions', event)">
+        <span class="nav-icon">💳</span><span id="navTx">Transactions</span>
     </button>
-    <button class="tool-btn" onclick="switchTab('budget', document.querySelectorAll('.tab-btn')[2])">
-        <span>🎯</span>
-        <span id="navBudget">Budget</span>
+    <button class="nav-item" onclick="switchTab('budgets', event)">
+        <span class="nav-icon">🎯</span><span id="navBudgets">Budgets</span>
     </button>
-    <button class="tool-btn" onclick="exportData()">
-        <span>📊</span>
-        <span id="navExport">Export</span>
+    <button class="nav-item" onclick="switchTab('categories', event)">
+        <span class="nav-icon">⚙️</span><span id="navCategories">Settings</span>
     </button>
-    <button class="tool-btn" onclick="clearData()">
-        <span>🗑️</span>
-        <span id="navReset">Reset</span>
+    <button class="nav-item" onclick="switchTab('audit', event)">
+        <span class="nav-icon">📊</span><span id="navAudit">Audit</span>
     </button>
 </div>
+
+<div id="toast"></div>
 
 <script>
-    let currentLang = localStorage.getItem('smart_spends_lang') || 'en';
-    let currentCurrency = localStorage.getItem('smart_spends_curr') || '$';
-    let monthlyBudget = parseFloat(localStorage.getItem('smart_spends_budget')) || 0;
+/* ========== STATE ========== */
+let currentCurrency = localStorage.getItem('ss_currency') || '€';
+let currentCountry = localStorage.getItem('ss_country') || 'DE';
+let currentLang = localStorage.getItem('ss_lang') || 'en';
+let appPin = localStorage.getItem('ss_pin') || '';
+let pinBuffer = '';
 
-    document.getElementById('langSelect').value = currentLang;
-    document.getElementById('currencySelect').value = currentCurrency;
+let transactions = JSON.parse(localStorage.getItem('ss_transactions')) || [
+    { title: 'Wohnungsmiete', amount: 850, type: 'expense', category: 'Housing', date: '2026-06-15', recurring: true },
+    { title: 'Monatsgehalt', amount: 3200, type: 'income', category: 'Salary', date: '2026-06-01', recurring: true },
+    { title: 'Groceries', amount: 78.50, type: 'expense', category: 'Food', date: '2026-06-20', recurring: false },
+    { title: 'Metro Card', amount: 49, type: 'expense', category: 'Transport', date: '2026-06-03', recurring: true }
+];
+let categories = JSON.parse(localStorage.getItem('ss_categories')) || ['Housing', 'Food', 'Utilities', 'Transport', 'Salary', 'Entertainment', 'Health'];
+let categoryBudgets = JSON.parse(localStorage.getItem('ss_budgets')) || {
+    'Housing': 900, 'Food': 400, 'Utilities': 250, 'Transport': 150, 'Entertainment': 100, 'Health': 80
+};
 
-    let transactions = JSON.parse(localStorage.getItem('smart_spends_data')) || [
-        { name: 'Monthly Salary', amount: 2500, type: 'income', category: 'Salary' },
-        { name: 'Groceries & Supplies', amount: 85, type: 'expense', category: 'Food' }
+const countryCurrencyMap = {
+    'DE': '€', 'AE': 'د.إ', 'SA': 'ر.س', 'QA': 'ر.ق', 'KW': 'د.ك', 'OM': 'ر.ع.', 'BH': 'د.ب',
+    'IN': '₹', 'US': '$', 'GB': '£', 'EU': '€', 'JP': '¥', 'CN': '¥', 'AU': 'A$', 'CA': 'C$', 'RU': '₽'
+};
+
+/* ========== INIT ========== */
+document.getElementById('countrySelect').value = currentCountry;
+document.getElementById('customCurrencyInput').value = currentCurrency;
+const currOpts = ['€','د.إ','ر.س','ر.ق','د.ك','ر.ع.','د.ب','₹','$','£','¥'];
+document.getElementById('headerCurrencySelect').value = currOpts.includes(currentCurrency) ? currentCurrency : '€';
+document.getElementById('langSelect').value = currentLang;
+document.getElementById('txDate').valueAsDate = new Date();
+
+/* ========== TRANSLATIONS (nav only for now – expandable) ========== */
+const translations = {
+    en: { dash:"Dashboard", tx:"Transactions", budgets:"Budgets", categories:"Settings", audit:"Audit" },
+    hi: { dash:"डैशबोर्ड", tx:"लेन-देन", budgets:"बजट", categories:"सेटिंग्स", audit:"ऑडिट" },
+    mr: { dash:"डॅशबोर्ड", tx:"व्यवहार", budgets:"बजेट", categories:"सेटिंग्ज", audit:"ऑडिट" },
+    gu: { dash:"ડેશબોર્ડ", tx:"વ્યવહારો", budgets:"બજેટ", categories:"સેટિંગ્સ", audit:"ઓડિટ" },
+    bn: { dash:"ড্যাশবোর্ড", tx:"লেনদেন", budgets:"বাজেট", categories:"সেটিংস", audit:"অডিট" },
+    pa: { dash:"ਡੈਸ਼ਬੋਰਡ", tx:"ਲੈਣ-ਦੇਣ", budgets:"ਬਜਟ", categories:"ਸੈਟਿੰਗਾਂ", audit:"ਆਡਿਟ" },
+    ta: { dash:"டாஷ்போர்டு", tx:"பரிவர்த்தனைகள்", budgets:"பட்ஜெட்", categories:"அமைப்புகள்", audit:"தணிக்கை" },
+    te: { dash:"డాష్‌బోర్డ్", tx:"లావాదేవీలు", budgets:"బడ్జెట్", categories:"సెట్టింగ్‌లు", audit:"ఆడిట్" },
+    ur: { dash:"ڈیش بورڈ", tx:"لین دین", budgets:"بجٹ", categories:"ترتیبات", audit:"آڈٹ" },
+    ru: { dash:"Главная", tx:"Транзакции", budgets:"Бюджеты", categories:"Настройки", audit:"Аудит" },
+    zh: { dash:"仪表板", tx:"交易", budgets:"预算", categories:"设置", audit:"审计" },
+    es: { dash:"Panel", tx:"Transacciones", budgets:"Presupuestos", categories:"Ajustes", audit:"Auditoría" },
+    fr: { dash:"Tableau", tx:"Transactions", budgets:"Budgets", categories:"Paramètres", audit:"Audit" },
+    de: { dash:"Übersicht", tx:"Transaktionen", budgets:"Budgets", categories:"Einstellungen", audit:"Prüfung" },
+    ja: { dash:"ダッシュボード", tx:"取引", budgets:"予算", categories:"設定", audit:"監査" },
+    ar: { dash:"الرئيسية", tx:"المعاملات", budgets:"الميزانيات", categories:"الإعدادات", audit:"تدقيق" }
+};
+
+function changeLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('ss_lang', currentLang);
+    applyTranslations();
+}
+function applyTranslations() {
+    const t = translations[currentLang] || translations.en;
+    document.getElementById('navDash').textContent = t.dash;
+    document.getElementById('navTx').textContent = t.tx;
+    document.getElementById('navBudgets').textContent = t.budgets;
+    document.getElementById('navCategories').textContent = t.categories;
+    document.getElementById('navAudit').textContent = t.audit;
+}
+
+function headerCurrencyChange(val) {
+    currentCurrency = val;
+    document.getElementById('customCurrencyInput').value = currentCurrency;
+    localStorage.setItem('ss_currency', currentCurrency);
+    updateUI(false);
+}
+function onCountryChange(code) {
+    currentCountry = code;
+    localStorage.setItem('ss_country', currentCountry);
+    if (countryCurrencyMap[code]) {
+        currentCurrency = countryCurrencyMap[code];
+        document.getElementById('customCurrencyInput').value = currentCurrency;
+        document.getElementById('headerCurrencySelect').value = currOpts.includes(currentCurrency) ? currentCurrency : '';
+        localStorage.setItem('ss_currency', currentCurrency);
+        updateUI(false);
+    }
+}
+function applyCustomCurrency(val) {
+    const typed = val.trim();
+    if (typed) {
+        currentCurrency = typed;
+        localStorage.setItem('ss_currency', currentCurrency);
+        document.getElementById('headerCurrencySelect').value = '';
+        updateUI(false);
+    }
+}
+
+/* ========== NAV ========== */
+function switchTab(tabName, event) {
+    if (event) event.preventDefault();
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + tabName).classList.add('active');
+    const btn = Array.from(document.querySelectorAll('.nav-item')).find(el =>
+        el.getAttribute('onclick') && el.getAttribute('onclick').includes(tabName)
+    );
+    if (btn) btn.classList.add('active');
+    updateUI(false);
+}
+
+/* ========== FILTERS ========== */
+function initDateFilters() {
+    const yearSelect = document.getElementById('filterYear');
+    const monthSelect = document.getElementById('filterMonth');
+    if (yearSelect.options.length > 0) return;
+
+    const currentYear = new Date().getFullYear();
+    let yHtml = '<option value="all">All Years</option>';
+    for (let y = currentYear; y >= currentYear - 2; y--) yHtml += `<option value="${y}">${y}</option>`;
+    yearSelect.innerHTML = yHtml;
+
+    const months = [
+        {val:'all', name:'All Months'}, {val:'01', name:'Jan'}, {val:'02', name:'Feb'},
+        {val:'03', name:'Mar'}, {val:'04', name:'Apr'}, {val:'05', name:'May'},
+        {val:'06', name:'Jun'}, {val:'07', name:'Jul'}, {val:'08', name:'Aug'},
+        {val:'09', name:'Sep'}, {val:'10', name:'Oct'}, {val:'11', name:'Nov'}, {val:'12', name:'Dec'}
     ];
+    monthSelect.innerHTML = months.map(m => `<option value="${m.val}">${m.name}</option>`).join('');
+}
 
-    const translations = {
-        en: {
-            title: "SmartSpends Pro",
-            lblTotalBalance: "Total Balance",
-            lblIncome: "Income",
-            lblExpenses: "Expenses",
-            tabDash: "Dashboard",
-            tabAdd: "Add Item",
-            tabBudget: "Budget",
-            lblTxType: "Transaction Type",
-            lblTxName: "Description",
-            lblTxAmount: "Amount",
-            lblTxCategory: "Category",
-            addTxBtn: "Add Transaction",
-            lblHistory: "Transaction History",
-            lblBudgetHeading: "Monthly Budget Control",
-            lblSetBudget: "Set Limit Amount",
-            saveBudgetBtn: "Save Budget Limit",
-            navHome: "Home",
-            navAdd: "Add",
-            navBudget: "Budget",
-            navExport: "Export",
-            navReset: "Reset"
-        },
-        hi: {
-            title: "स्मार्ट स्पेंड्स प्रो",
-            lblTotalBalance: "कुल शेष राशि",
-            lblIncome: "आय",
-            lblExpenses: "खर्च",
-            tabDash: "डैशबोर्ड",
-            tabAdd: "जोड़ें",
-            tabBudget: "बजट",
-            lblTxType: "लेनदेन का प्रकार",
-            lblTxName: "विवरण",
-            lblTxAmount: "राशि",
-            lblTxCategory: "श्रेणी",
-            addTxBtn: "लेनदेन जोड़ें",
-            lblHistory: "लेनदेन का इतिहास",
-            lblBudgetHeading: "मासिक बजट नियंत्रण",
-            lblSetBudget: "सीमा राशि निर्धारित करें",
-            saveBudgetBtn: "बजट सहेजें",
-            navHome: "होम",
-            navAdd: "जोड़ें",
-            navBudget: "बजट",
-            navExport: "एक्सपोर्ट",
-            navReset: "रीसेट"
-        },
-        ar: {
-            title: "المصروف الذكي برو",
-            lblTotalBalance: "إجمالي الرصيد",
-            lblIncome: "الدخل",
-            lblExpenses: "المصروفات",
-            tabDash: "لوحة التحكم",
-            tabAdd: "إضافة",
-            tabBudget: "الميزانية",
-            lblTxType: "نوع المعاملة",
-            lblTxName: "الوصف",
-            lblTxAmount: "المبلغ",
-            lblTxCategory: "الفئة",
-            addTxBtn: "إضافة معاملة",
-            lblHistory: "سجل المعاملات",
-            lblBudgetHeading: "التحكم في الميزانية",
-            lblSetBudget: "تعيين حد المبلغ",
-            saveBudgetBtn: "حفظ الميزانية",
-            navHome: "الرئيسية",
-            navAdd: "إضافة",
-            navBudget: "الميزانية",
-            navExport: "تصدير",
-            navReset: "إعادة ضبط"
+function updateDropdowns() {
+    const select = document.getElementById('txCategory');
+    const modalSelect = document.getElementById('modalCategorySelect');
+    const currentTxCat = select.value;
+    const currentModalCat = modalSelect.value;
+    select.innerHTML = '';
+    modalSelect.innerHTML = '';
+    categories.forEach(cat => {
+        if (cat === 'Salary') return;
+        select.add(new Option(cat, cat));
+        modalSelect.add(new Option(cat, cat));
+    });
+    select.add(new Option('Salary', 'Salary'));
+    if (currentTxCat) select.value = currentTxCat;
+    if (currentModalCat) modalSelect.value = currentModalCat;
+}
+
+/* ========== BUDGET MODAL ========== */
+function openBudgetModal() {
+    document.querySelectorAll('.currSign').forEach(el => el.textContent = currentCurrency);
+    document.getElementById('budgetModal').classList.add('show');
+}
+function closeBudgetModal() {
+    document.getElementById('budgetModal').classList.remove('show');
+    document.getElementById('modalLimitInput').value = '';
+}
+function saveModalBudget() {
+    const cat = document.getElementById('modalCategorySelect').value;
+    const val = parseFloat(document.getElementById('modalLimitInput').value);
+    if (!isNaN(val) && cat) {
+        categoryBudgets[cat] = val;
+        closeBudgetModal();
+        updateUI(true);
+        toast('Budget saved');
+    }
+}
+
+/* ========== CORE UI ========== */
+function updateUI(forceDropdowns = false) {
+    if (forceDropdowns || document.getElementById('filterYear').options.length === 0) {
+        initDateFilters();
+        updateDropdowns();
+    }
+    applyTranslations();
+
+    const selYear = document.getElementById('filterYear').value || 'all';
+    const selMonth = document.getElementById('filterMonth').value || 'all';
+    const searchQ = (document.getElementById('txSearch')?.value || '').toLowerCase().trim();
+    const typeFilter = document.getElementById('txTypeFilter')?.value || 'all';
+
+    let filtered = transactions.filter(t => {
+        if (!t.date) return true;
+        const [y, m] = t.date.split('-');
+        if (selYear !== 'all' && y !== selYear) return false;
+        if (selMonth !== 'all' && m !== selMonth) return false;
+        return true;
+    });
+
+    // Dashboard numbers from filtered
+    let income = 0, expense = 0;
+    const catSpending = {};
+    categories.forEach(c => catSpending[c] = 0);
+
+    filtered.forEach(t => {
+        const amt = parseFloat(t.amount) || 0;
+        if (t.type === 'income') income += amt;
+        else {
+            expense += amt;
+            if (catSpending[t.category] !== undefined) catSpending[t.category] += amt;
         }
-    };
+    });
 
-    function changeLanguage(lang) {
-        currentLang = lang;
-        localStorage.setItem('smart_spends_lang', lang);
-        applyTranslations();
+    const balance = income - expense;
+    const savedPercent = income > 0 ? Math.max(0, Math.round((balance / income) * 100)) : 0;
+
+    document.getElementById('dashBalance').textContent = `${currentCurrency} ${balance.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:2})}`;
+    document.getElementById('dashIncome').textContent = `${currentCurrency} ${income.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:2})}`;
+    document.getElementById('dashExpense').textContent = `${currentCurrency} ${expense.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:2})}`;
+    document.getElementById('dashSaved').textContent = `${savedPercent}%`;
+
+    // Category breakdown
+    let bHtml = '';
+    categories.forEach(cat => {
+        if (cat === 'Salary') return;
+        const spent = catSpending[cat] || 0;
+        const limit = categoryBudgets[cat] || 1000;
+        const pct = Math.min(100, Math.round((spent / limit) * 100));
+        const over = spent > limit;
+        bHtml += `
+            <div class="progress-card">
+                <div class="progress-header">
+                    <span>${cat}${over ? ' ⚠️' : ''}</span>
+                    <span>${currentCurrency} ${spent.toLocaleString()} / ${currentCurrency} ${limit.toLocaleString()}</span>
+                </div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill ${over ? 'over' : ''}" style="width:${pct}%;"></div></div>
+                <div class="progress-footer">${pct}% used${over ? ' · Over budget!' : ''}</div>
+            </div>`;
+    });
+    document.getElementById('categoryBreakdownList').innerHTML = bHtml || '<div class="empty-state">No categories yet</div>';
+
+    // Budgets tab
+    let totSpent = 0, totLimit = 0, budHtml = '';
+    categories.forEach(cat => {
+        if (cat === 'Salary') return;
+        const spent = catSpending[cat] || 0;
+        const limit = categoryBudgets[cat] || 1000;
+        totSpent += spent; totLimit += limit;
+        const pct = Math.min(100, Math.round((spent / limit) * 100));
+        const over = spent > limit;
+        budHtml += `
+            <div class="progress-card">
+                <div class="progress-header">
+                    <span>${cat}${over ? ' ⚠️' : ''}</span>
+                    <span>${currentCurrency} ${spent.toLocaleString()} / ${currentCurrency} ${limit.toLocaleString()}</span>
+                </div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill ${over ? 'over' : ''}" style="width:${pct}%;"></div></div>
+                <div class="progress-footer">${pct}% used</div>
+            </div>`;
+    });
+    const overallPct = totLimit > 0 ? Math.min(100, Math.round((totSpent / totLimit) * 100)) : 0;
+    document.getElementById('totalBudgetValues').textContent = `${currentCurrency} ${totSpent.toLocaleString()} of ${currentCurrency} ${totLimit.toLocaleString()}`;
+    document.getElementById('totalbarFill').style.width = `${overallPct}%`;
+    document.getElementById('totalbarFill').classList.toggle('over', totSpent > totLimit);
+    document.getElementById('budgetsListContainer').innerHTML = budHtml || '<div class="empty-state">No budgets set</div>';
+
+    // Trend bars (last 6 months net)
+    renderTrendBars();
+
+    // Transactions list (search + type filter applied on full list for manage view)
+    let listTx = transactions.slice();
+    if (searchQ) {
+        listTx = listTx.filter(t =>
+            (t.title || '').toLowerCase().includes(searchQ) ||
+            (t.category || '').toLowerCase().includes(searchQ)
+        );
     }
+    if (typeFilter !== 'all') listTx = listTx.filter(t => t.type === typeFilter);
 
-    function changeCurrency(curr) {
-        currentCurrency = curr;
-        localStorage.setItem('smart_spends_curr', curr);
-        updateUI();
-    }
-
-    function switchTab(tabName, btnEl) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.getElementById('section-' + tabName).classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function applyTranslations() {
-        let t = translations[currentLang] || translations['en'];
-        document.getElementById('appTitle').textContent = t.title;
-        document.getElementById('lblTotalBalance').textContent = t.lblTotalBalance;
-        document.getElementById('lblIncome').textContent = t.lblIncome;
-        document.getElementById('lblExpenses').textContent = t.lblExpenses;
-        document.getElementById('tabDash').textContent = t.tabDash;
-        document.getElementById('tabAdd').textContent = t.tabAdd;
-        document.getElementById('tabBudget').textContent = t.tabBudget;
-        document.getElementById('lblTxType').textContent = t.lblTxType;
-        document.getElementById('lblTxName').textContent = t.lblTxName;
-        document.getElementById('lblTxAmount').textContent = t.lblTxAmount;
-        document.getElementById('lblTxCategory').textContent = t.lblTxCategory;
-        document.getElementById('addTxBtn').textContent = t.addTxBtn;
-        document.getElementById('lblHistory').textContent = t.lblHistory;
-        document.getElementById('lblBudgetHeading').textContent = t.lblBudgetHeading;
-        document.getElementById('lblSetBudget').textContent = t.lblSetBudget;
-        document.getElementById('saveBudgetBtn').textContent = t.saveBudgetBtn;
-        document.getElementById('navHome').textContent = t.navHome;
-        document.getElementById('navAdd').textContent = t.navAdd;
-        document.getElementById('navBudget').textContent = t.navBudget;
-        document.getElementById('navExport').textContent = t.navExport;
-        document.getElementById('navReset').textContent = t.navReset;
-    }
-
-    function saveBudget() {
-        let val = parseFloat(document.getElementById('budgetInput').value);
-        if (!isNaN(val)) {
-            monthlyBudget = val;
-            localStorage.setItem('smart_spends_budget', monthlyBudget);
-            document.getElementById('budgetInput').value = '';
-            updateUI();
-            alert(currentLang === 'hi' ? 'बजट सफलतापूर्वक सहेजा गया!' : 'Budget limit saved successfully!');
-        }
-    }
-
-    function exportData() {
-        let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(transactions));
-        let downloadAnchor = document.createElement('a');
-        downloadAnchor.setAttribute("href", dataStr);
-        downloadAnchor.setAttribute("download", "smart_spends_backup.json");
-        document.body.appendChild(downloadAnchor);
-        downloadAnchor.click();
-        downloadAnchor.remove();
-    }
-
-    function clearData() {
-        if (confirm(currentLang === 'hi' ? 'क्या आप सभी डेटा रीसेट करना चाहते हैं?' : 'Are you sure you want to reset all data?')) {
-            transactions = [];
-            monthlyBudget = 0;
-            localStorage.removeItem('smart_spends_budget');
-            updateUI();
-        }
-    }
-
-    function addTransaction() {
-        let name = document.getElementById('txNameInput').value.trim();
-        let amount = parseFloat(document.getElementById('txAmountInput').value);
-        let type = document.getElementById('txTypeInput').value;
-        let category = document.getElementById('txCategoryInput').value;
-
-        if (!name || isNaN(amount) || amount <= 0) {
-            alert(currentLang === 'hi' ? 'कृपया सही विवरण दर्ज करें' : 'Please enter valid transaction details');
-            return;
-        }
-
-        transactions.unshift({ name, amount, type, category });
-        document.getElementById('txNameInput').value = '';
-        document.getElementById('txAmountInput').value = '';
-        updateUI();
-        switchTab('dashboard');
-    }
-
-    function deleteTransaction(index) {
-        transactions.splice(index, 1);
-        updateUI();
-    }
-
-    function updateUI() {
-        let income = 0;
-        let expenses = 0;
-        let html = '';
-
-        transactions.forEach((tx, idx) => {
-            if (tx.type === 'income') {
-                income += tx.amount;
-            } else {
-                expenses += tx.amount;
-            }
-
-            html += `
-                <div class="transaction-item">
-                    <div>
-                        <strong style="font-size: 0.95rem; display: block;">${tx.name}</strong>
-                        <span style="color: #94a3b8; font-size: 0.75rem;">${tx.category}</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-weight: bold; color: ${tx.type === 'income' ? 'var(--accent-green)' : 'var(--accent-red)'};">
-                            ${tx.type === 'income' ? '+' : '-'}${currentCurrency}${tx.amount.toFixed(2)}
-                        </span>
-                        <button onclick="deleteTransaction(${idx})" style="background: #ef4444; color: #fff; border: none; padding: 3px 7px; border-radius: 4px; cursor: pointer; font-size: 0.7rem;">✕</button>
+    let txHtml = '';
+    listTx.forEach((t) => {
+        const realIdx = transactions.indexOf(t);
+        txHtml += `
+            <li class="list-card">
+                <div class="list-card-info">
+                    <strong>${escapeHtml(t.title)}${t.recurring ? '<span class="badge">↻</span>' : ''}</strong>
+                    <span>${t.category} · ${t.date || 'No date'}</span>
+                </div>
+                <div class="list-card-right">
+                    <span class="list-card-amount" style="color:${t.type === 'income' ? 'var(--green)' : 'var(--red)'};">
+                        ${t.type === 'income' ? '+' : '-'}${currentCurrency} ${parseFloat(t.amount).toLocaleString()}
+                    </span>
+                    <div class="btn-group">
+                        <button class="edit-btn" onclick="editTx(${realIdx})">Edit</button>
+                        <button class="del-btn" onclick="delTx(${realIdx})">Del</button>
                     </div>
                 </div>
-            `;
-        });
+            </li>`;
+    });
+    document.getElementById('txList').innerHTML = txHtml || '<div class="empty-state">No transactions found</div>';
 
-        let balance = income - expenses;
-        document.getElementById('netBalance').textContent = `${currentCurrency}${balance.toFixed(2)}`;
-        document.getElementById('totalIncome').textContent = `+${currentCurrency}${income.toFixed(2)}`;
-        document.getElementById('totalExpenses</h5>').textContent; // Safe query check
-        document.getElementById('totalExpenses').textContent = `-${currentCurrency}${expenses.toFixed(2)}`;
+    // Categories list
+    let catHtml = '';
+    categories.forEach((cat, idx) => {
+        const limitTxt = cat === 'Salary' ? 'Income source' : `Limit: ${currentCurrency} ${(categoryBudgets[cat] || 1000).toLocaleString()}`;
+        catHtml += `
+            <li class="list-card">
+                <div class="list-card-info">
+                    <strong>${escapeHtml(cat)}</strong>
+                    <span>${limitTxt}</span>
+                </div>
+                <div class="btn-group">
+                    <button class="edit-btn" onclick="editCat(${idx})">Edit</button>
+                    <button class="del-btn" onclick="delCat(${idx})">Del</button>
+                </div>
+            </li>`;
+    });
+    document.getElementById('categoryList').innerHTML = catHtml;
 
-        let budgetText = document.getElementById('budgetStatusText');
-        if (monthlyBudget > 0) {
-            if (expenses > monthlyBudget) {
-                budgetStatusText.innerHTML = `<span style="color: var(--accent-red);">⚠️ Budget exceeded! Limit: ${currentCurrency}${monthlyBudget}</span>`;
-            } else {
-                budgetStatusText.innerHTML = `<span style="color: var(--accent-green);">✓ Within budget limit (${currentCurrency}${monthlyBudget})</span>`;
-            }
-        } else {
-            budgetStatusText.textContent = currentLang === 'hi' ? 'कोई बजट सीमा निर्धारित नहीं है' : 'No monthly budget limit set.';
-        }
+    generateAuditTables();
+    persist();
+}
 
-        document.getElementById('transactionListContainer').innerHTML = html || '<p style="text-align:center; color:#94a3b8; font-size:0.85rem;">No transactions recorded.</p>';
-        localStorage.setItem('smart_spends_data', JSON.stringify(transactions));
+function renderTrendBars() {
+    const now = new Date();
+    const months = [];
+    for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+        months.push({ key, label: d.toLocaleString('default',{month:'short'}), net: 0 });
     }
+    transactions.forEach(t => {
+        if (!t.date) return;
+        const ym = t.date.slice(0,7);
+        const m = months.find(x => x.key === ym);
+        if (m) {
+            const amt = parseFloat(t.amount) || 0;
+            m.net += (t.type === 'income' ? amt : -amt);
+        }
+    });
+    const maxAbs = Math.max(...months.map(m => Math.abs(m.net)), 1);
+    document.getElementById('trendBars').innerHTML = months.map(m => {
+        const h = Math.max(4, Math.round((Math.abs(m.net) / maxAbs) * 66));
+        const cls = m.net >= 0 ? 'income' : 'expense';
+        return `<div class="mini-bar ${cls}" style="height:${h}px;" title="${m.label}: ${m.net.toFixed(0)}"></div>`;
+    }).join('');
+}
 
-    applyTranslations();
-    updateUI();
+function generateAuditTables() {
+    const yearlyData = {}, monthlyData = {};
+    transactions.forEach(t => {
+        if (!t.date) return;
+        const [y, m] = t.date.split('-');
+        const amt = parseFloat(t.amount) || 0;
+        if (!yearlyData[y]) yearlyData[y] = { inc:0, exp:0 };
+        if (t.type === 'income') yearlyData[y].inc += amt; else yearlyData[y].exp += amt;
+        const ym = `${y}-${m}`;
+        if (!monthlyData[ym]) monthlyData[ym] = { inc:0, exp:0 };
+        if (t.type === 'income') monthlyData[ym].inc += amt; else monthlyData[ym].exp += amt;
+    });
+
+    let yHtml = '';
+    Object.keys(yearlyData).sort().reverse().forEach(y => {
+        const d = yearlyData[y];
+        const net = d.inc - d.exp;
+        yHtml += `<tr><td>${y}</td><td style="color:var(--green)">+${currentCurrency} ${d.inc.toLocaleString()}</td><td style="color:var(--red)">-${currentCurrency} ${d.exp.toLocaleString()}</td><td style="font-weight:700">${currentCurrency} ${net.toLocaleString()}</td></tr>`;
+    });
+    document.querySelector('#yearlyTable tbody').innerHTML = yHtml || '<tr><td colspan="4" style="text-align:center;">No data</td></tr>';
+
+    let mHtml = '';
+    Object.keys(monthlyData).sort().reverse().forEach(ym => {
+        const d = monthlyData[ym];
+        const net = d.inc - d.exp;
+        mHtml += `<tr><td>${ym}</td><td style="color:var(--green)">+${currentCurrency} ${d.inc.toLocaleString()}</td><td style="color:var(--red)">-${currentCurrency} ${d.exp.toLocaleString()}</td><td style="font-weight:700">${currentCurrency} ${net.toLocaleString()}</td></tr>`;
+    });
+    document.querySelector('#monthlyTable tbody').innerHTML = mHtml || '<tr><td colspan="4" style="text-align:center;">No data</td></tr>';
+}
+
+function persist() {
+    localStorage.setItem('ss_transactions', JSON.stringify(transactions));
+    localStorage.setItem('ss_categories', JSON.stringify(categories));
+    localStorage.setItem('ss_budgets', JSON.stringify(categoryBudgets));
+}
+
+function escapeHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+/* ========== TRANSACTIONS ========== */
+document.getElementById('txForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const title = document.getElementById('txTitle').value.trim();
+    const amount = document.getElementById('txAmount').value;
+    const type = document.getElementById('txType').value;
+    const category = document.getElementById('txCategory').value;
+    const date = document.getElementById('txDate').value;
+    const recurring = document.getElementById('txRecurring').checked;
+    const editIdx = document.getElementById('editIndex').value;
+
+    if (editIdx === '') {
+        transactions.unshift({ title, amount, type, category, date, recurring });
+        toast('Transaction added');
+    } else {
+        transactions[editIdx] = { title, amount, type, category, date, recurring };
+        document.getElementById('editIndex').value = '';
+        document.getElementById('formSubmitBtn').textContent = 'Add Transaction';
+        toast('Transaction updated');
+    }
+    document.getElementById('txForm').reset();
+    document.getElementById('txDate').valueAsDate = new Date();
+    document.getElementById('txRecurring').checked = false;
+    updateUI(false);
+});
+
+function editTx(idx) {
+    const t = transactions[idx];
+    document.getElementById('txTitle').value = t.title;
+    document.getElementById('txAmount').value = t.amount;
+    document.getElementById('txType').value = t.type;
+    document.getElementById('txCategory').value = t.category;
+    document.getElementById('txDate').value = t.date || new Date().toISOString().slice(0,10);
+    document.getElementById('txRecurring').checked = !!t.recurring;
+    document.getElementById('editIndex').value = idx;
+    document.getElementById('formSubmitBtn').textContent = 'Update Transaction';
+    switchTab('transactions');
+}
+function delTx(idx) {
+    if (confirm('Delete this transaction?')) {
+        transactions.splice(idx, 1);
+        updateUI(false);
+        toast('Deleted');
+    }
+}
+
+/* ========== CATEGORIES ========== */
+document.getElementById('catForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('catNameInput').value.trim();
+    const limit = parseFloat(document.getElementById('catLimitInput').value) || 1000;
+    const editIdx = document.getElementById('editCatIndex').value;
+    if (!name) return;
+
+    if (editIdx === '') {
+        if (categories.includes(name)) { alert('Category already exists'); return; }
+        categories.push(name);
+        categoryBudgets[name] = limit;
+        toast('Category added');
+    } else {
+        const old = categories[editIdx];
+        categories[editIdx] = name;
+        categoryBudgets[name] = limit;
+        if (old !== name) delete categoryBudgets[old];
+        document.getElementById('editCatIndex').value = '';
+        document.getElementById('catSubmitBtn').textContent = 'Add Category';
+        toast('Category updated');
+    }
+    document.getElementById('catForm').reset();
+    updateUI(true);
+});
+function editCat(idx) {
+    const c = categories[idx];
+    document.getElementById('catNameInput').value = c;
+    document.getElementById('catLimitInput').value = categoryBudgets[c] || 1000;
+    document.getElementById('editCatIndex').value = idx;
+    document.getElementById('catSubmitBtn').textContent = 'Update Category';
+}
+function delCat(idx) {
+    const c = categories[idx];
+    if (confirm(`Delete category "${c}"?`)) {
+        categories.splice(idx, 1);
+        delete categoryBudgets[c];
+        updateUI(true);
+        toast('Category deleted');
+    }
+}
+
+/* ========== EXPORT / IMPORT ========== */
+function exportDataJson() {
+    const exportObj = { transactions, categories, categoryBudgets, currentCurrency, currentCountry, exportedAt: new Date().toISOString() };
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj, null, 2));
+    const a = document.createElement('a');
+    a.href = dataStr;
+    a.download = `smartspends_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    toast('JSON exported');
+}
+function exportDataCsv() {
+    let csv = 'Date,Title,Amount,Type,Category,Recurring\n';
+    transactions.forEach(t => {
+        csv += `"${t.date || ''}","${(t.title||'').replace(/"/g,'""')}",${t.amount},${t.type},"${t.category || ''}",${t.recurring ? 'Yes' : 'No'}\n`;
+    });
+    const dataStr = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+    const a = document.createElement('a');
+    a.href = dataStr;
+    a.download = `smartspends_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    toast('CSV exported');
+}
+function importDataJson(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const json = JSON.parse(e.target.result);
+            if (json.transactions) transactions = json.transactions;
+            if (json.categories) categories = json.categories;
+            if (json.categoryBudgets) categoryBudgets = json.categoryBudgets;
+            if (json.currentCurrency) currentCurrency = json.currentCurrency;
+            if (json.currentCountry) {
+                currentCountry = json.currentCountry;
+                document.getElementById('countrySelect').value = currentCountry;
+            }
+            updateUI(true);
+            toast('Data imported successfully');
+        } catch (err) {
+            alert('Invalid JSON file');
+        }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+}
+
+/* ========== PIN LOCK ========== */
+function savePin() {
+    const p = document.getElementById('pinInput').value.trim();
+    if (p && /^\d{4}$/.test(p)) {
+        appPin = p;
+        localStorage.setItem('ss_pin', appPin);
+        document.getElementById('pinInput').value = '';
+        toast('PIN saved. App will ask for it next time.');
+    } else if (!p) {
+        toast('Enter a 4-digit PIN');
+    } else {
+        alert('PIN must be exactly 4 digits');
+    }
+}
+function clearPin() {
+    appPin = '';
+    localStorage.removeItem('ss_pin');
+    document.getElementById('pinInput').value = '';
+    toast('PIN removed');
+}
+function setupPinPad() {
+    const pad = document.getElementById('pinPad');
+    pad.innerHTML = '';
+    [1,2,3,4,5,6,7,8,9,'',0,'⌫'].forEach(k => {
+        const btn = document.createElement('button');
+        btn.className = 'pin-key';
+        btn.textContent = k;
+        if (k === '') { btn.style.visibility = 'hidden'; }
+        else {
+            btn.onclick = () => {
+                if (k === '⌫') {
+                    pinBuffer = pinBuffer.slice(0, -1);
+                } else if (pinBuffer.length < 4) {
+                    pinBuffer += String(k);
+                }
+                updatePinDots();
+                if (pinBuffer.length === 4) {
+                    if (pinBuffer === appPin) {
+                        document.getElementById('pinOverlay').classList.remove('show');
+                        pinBuffer = '';
+                        updatePinDots();
+                    } else {
+                        pinBuffer = '';
+                        updatePinDots();
+                        toast('Wrong PIN');
+                        // mild shake
+                        document.getElementById('pinDots').style.transform = 'translateX(-6px)';
+                        setTimeout(() => document.getElementById('pinDots').style.transform = '', 150);
+                    }
+                }
+            };
+        }
+        pad.appendChild(btn);
+    });
+}
+function updatePinDots() {
+    const dots = document.querySelectorAll('#pinDots .pin-dot');
+    dots.forEach((d, i) => d.classList.toggle('filled', i < pinBuffer.length));
+}
+function checkPinOnStart() {
+    if (appPin) {
+        document.getElementById('pinOverlay').classList.add('show');
+        setupPinPad();
+    }
+}
+
+/* ========== PWA ========== */
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+}
+
+/* ========== BOOT ========== */
+checkPinOnStart();
+updateUI(true);
 </script>
-
 </body>
 </html>
